@@ -92,18 +92,19 @@
             submit(flag) {
                 var temp = { uid: this.uid, date: "", breakfast: 0, lunch: 0, dinner: 0, nightsnack: 0};
                 if(flag == 1) {
+                    console.log(this.date1[0].checked);
                     temp.date = this.today;
-                    this.date1.breakfast == 1?temp.breakfast = 1:temp.breakfast = 0;
-                    this.date1.lunch == 1?temp.lunch = 1:temp.lunch = 0;
-                    this.date1.dinner == 1?temp.dinner = 1:temp.dinner = 0;
-                    this.date1.nightsnack == 1?temp.nightsnack = 1:temp.nightsnack = 0;
+                    this.date1[0].checked == 1?temp.breakfast = 1:temp.breakfast = 0;
+                    this.date1[1].checked == 1?temp.lunch = 1:temp.lunch = 0;
+                    this.date1[2].checked == 1?temp.dinner = 1:temp.dinner = 0;
+                    this.date1[3].checked == 1?temp.nightsnack = 1:temp.nightsnack = 0;
                 }
                 if(flag == 2) {
                     temp.date = this.tommorrow;
-                    this.date2.breakfast == 1?temp.breakfast = 1:temp.breakfast = 0;
-                    this.date2.lunch == 1?temp.lunch = 1:temp.lunch = 0;
-                    this.date2.dinner == 1?temp.dinner = 1:temp.dinner = 0;
-                    this.date2.nightsnack == 1?temp.nightsnack = 1:temp.nightsnack = 0;
+                    this.date2[0].checked == 1?temp.breakfast = 1:temp.breakfast = 0;
+                    this.date2[1].checked == 1?temp.lunch = 1:temp.lunch = 0;
+                    this.date2[2].checked == 1?temp.dinner = 1:temp.dinner = 0;
+                    this.date2[3].checked == 1?temp.nightsnack = 1:temp.nightsnack = 0;
                 }
                 console.log(temp);
                 axios.get('http://127.0.0.1:3000/users/insertMeal', {
