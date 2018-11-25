@@ -90,32 +90,58 @@
                 this.$router.push({ name: 'ORecord' });
             },
             submit(flag) {
-                var temp = { uid: this.uid, date: "", breakfast: 0, lunch: 0, dinner: 0, nightsnack: 0};
-                if(flag == 1) {
-                    console.log(this.date1[0].checked);
-                    temp.date = this.today;
-                    this.date1[0].checked == 1?temp.breakfast = 1:temp.breakfast = 0;
-                    this.date1[1].checked == 1?temp.lunch = 1:temp.lunch = 0;
-                    this.date1[2].checked == 1?temp.dinner = 1:temp.dinner = 0;
-                    this.date1[3].checked == 1?temp.nightsnack = 1:temp.nightsnack = 0;
+                var temp = { uid: this.uid, date: "", breakfast: 0, lunch: 0, dinner: 0, nightsnack: 0 };
+                if (flag == 1) {
+                    temp.date = this.today.toString();
+                    this.date1[0].checked == 1 ? temp.breakfast = 1 : temp.breakfast = 0;
+                    this.date1[1].checked == 1 ? temp.lunch = 1 : temp.lunch = 0;
+                    this.date1[2].checked == 1 ? temp.dinner = 1 : temp.dinner = 0;
+                    this.date1[3].checked == 1 ? temp.nightsnack = 1 : temp.nightsnack = 0;
                 }
-                if(flag == 2) {
+                if (flag == 2) {
                     temp.date = this.tommorrow;
-                    this.date2[0].checked == 1?temp.breakfast = 1:temp.breakfast = 0;
-                    this.date2[1].checked == 1?temp.lunch = 1:temp.lunch = 0;
-                    this.date2[2].checked == 1?temp.dinner = 1:temp.dinner = 0;
-                    this.date2[3].checked == 1?temp.nightsnack = 1:temp.nightsnack = 0;
+                    this.date2[0].checked == 1 ? temp.breakfast = 1 : temp.breakfast = 0;
+                    this.date2[1].checked == 1 ? temp.lunch = 1 : temp.lunch = 0;
+                    this.date2[2].checked == 1 ? temp.dinner = 1 : temp.dinner = 0;
+                    this.date2[3].checked == 1 ? temp.nightsnack = 1 : temp.nightsnack = 0;
                 }
-                console.log(temp);
-                axios.get('http://127.0.0.1:3000/users/insertMeal', {
-                    params: temp
+
+                axios.get('http://127.0.0.1:3000/users/findRecordByDate', {
+                    params: { uid: temp.uid, date: temp.date }
                 }).then(res => {
-                    console.log(res)
                     if (res.data.length) {
-                        this.data = res.data;
+                        console.log("已存在");
+
+                        axios.get('http://127.0.0.1:3000/users/alterMeal', {
+                            params:temp
+                        }).then(res => {
+                            if (res.data) {                                
+                                console.log(res.data);
+                            }
+                            else {
+                                console.log("请求失败！");
+                            }
+                        }).catch(err => {
+                            console.log('请求失败:' + err.status + ',' + err.statusText);
+                        });
                     }
                     else {
-                        alert("无记录！")
+                        console.log("无记录！");
+
+                        axios.get('http://127.0.0.1:3000/users/insertMeal', {
+                            params:temp
+                        }).then(res => {
+                            if (res.data) {                                
+                                console.log(res.data);
+                            }
+                            else {
+                                console.log("请求失败！");
+                            }
+                        }).catch(err => {
+                            console.log('请求失败:' + err.status + ',' + err.statusText);
+                        });
+
+
                     }
                 }).catch(err => {
                     console.log('请求失败:' + err.status + ',' + err.statusText);
@@ -154,7 +180,7 @@
         font-size: 24px;
         padding-top: 10px;
         background: #5BC8FF;
-        position: fixed;        
+        position: fixed;
         color: #fff;
         text-align: center;
     }
