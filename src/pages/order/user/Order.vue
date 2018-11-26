@@ -45,10 +45,8 @@
 
 <script>
     import axios from 'Axios';
+    import { Dialog } from 'vant';
     export default {
-        components: {
-            Confirm
-        },
         data() {
             return {
                 today: "",
@@ -116,41 +114,54 @@
                 }).then(res => {
                     if (res.data.length) {
                         console.log("已存在");
-                        this.$confirm('该日期已经提交过订餐，是否覆盖修改, 是否继续?', '提示', {
-                            confirmButtonText: '确定',
-                            cancelButtonText: '取消',
-                            type: 'warning'
+                        Dialog.confirm({
+                            title: temp.date + '已经存在订餐',
+                            message: '是否覆盖订餐记录？'
                         }).then(() => {
-                            axios.get('http://192.168.2.220:3000/users/alterMeal', {
-                                params: temp
-                            }).then(res => {
-                                if (res.data) {
-                                    console.log("记录已更新！");
-
-                                }
-                                else {
-                                    console.log("请求失败！");
-                                }
-                            }).catch(err => {
-                                console.log('请求失败:' + err.status + ',' + err.statusText);
-                            });
+                        axios.get('http://192.168.2.220:3000/users/alterMeal', {
+                            params: temp
+                        }).then(res => {
+                            if (res.data) {
+                                Dialog.alert({
+                                    message: '订餐记录已经更新'
+                                }).then(() => {
+                                    // on close
+                                });
+                            }
+                            else {
+                                Dialog.alert({
+                                    message: '请求失败，请重试'
+                                }).then(() => {
+                                    // on close
+                                });
+                            }
+                        }).catch(err => {
+                            console.log('请求失败:' + err.status + ',' + err.statusText);
+                        });
                         }).catch(() => {
-                            this.$message({
-                                type: 'info',
-                                message: '已取消删除'
+                            Dialog.alert({
+                                message: '已经取消'
+                            }).then(() => {
+                                // on close
                             });
                         });
-
 
                     }
                     else {
                         console.log("无记录！");
+                        Dialog.confirm({
+                            title: temp.date + '尚未订餐',
+                            message: "是否提交订餐？"
+                        }).then(() => {
+                            // on confirm
+                        }).catch(() => {
+                            // on cancel
+                        });
                         axios.get('http://192.168.2.220:3000/users/insertMeal', {
                             params: temp
                         }).then(res => {
                             if (res.data) {
                                 console.log("记录已添加！");
-
                             }
                             else {
                                 console.log("请求失败！");
@@ -287,5 +298,11 @@
         border-radius: 24px;
         outline: none;
         box-shadow: 0 1px 10px 0 #999;
+    }
+
+
+
+    .van-dialog__message--has-title {
+        text-align: center!important;
     }
 </style>

@@ -6,7 +6,11 @@
                 <span>订餐记录</span>
                 <img src="" alt="" class="right">
                 <div class="search">
-                    <input type="text" @click="dealData()">
+                    <input type="text" @click="show = true" :value="currentDate" readonly>
+
+                    <van-popup v-model="show" style="width: 80%;">
+                        <van-datetime-picker type="date" v-model="dateTemp" @confirm="searchRecord()" @cancel="show = false"/>
+                    </van-popup>
                 </div>
             </div>
             <div class="content">
@@ -48,16 +52,51 @@
 
 <script>
     import axios from 'Axios';
+    import { Popup } from 'vant';
     export default {
         data() {
             return {
                 today: "",
                 tommorrow: "",
                 data: [],
-                key: { uid: 1, date: "" }
+                key: { uid: 1, date: "" },
+                show: false,
+                dateTemp: "",
+                currentDate:  this.getNowFormatDate()
             }
         },
-        methods: {        
+        watch: {
+            dateTemp(val) {
+                var seperator1 = "-";
+                var year = val.getFullYear();
+                var month = val.getMonth() + 1;
+                var strDate = val.getDate();
+                if (month >= 1 && month <= 9) {
+                    month = "0" + month;
+                }
+                if (strDate >= 0 && strDate <= 9) {
+                    strDate = "0" + strDate;
+                }
+                var currentdate = year + seperator1 + month + seperator1 + strDate;
+                this.currentDate = currentdate;
+            }
+        },
+        methods: {            
+            getNowFormatDate() {
+                var date = new Date();
+                var seperator1 = "-";
+                var year = date.getFullYear();
+                var month = date.getMonth() + 1;
+                var strDate = date.getDate();
+                if (month >= 1 && month <= 9) {
+                    month = "0" + month;
+                }
+                if (strDate >= 0 && strDate <= 9) {
+                    strDate = "0" + strDate;
+                }
+                var currentdate = year + seperator1 + month + seperator1 + strDate;
+                return currentdate;
+            },
             back() {
                 this.$router.push({ name: 'Order' });
             },
@@ -77,8 +116,9 @@
                 });
             },
             searchRecord() {
+                this.show = false;
                 axios.get('http://192.168.2.220:3000/users/findRecordByDate', {
-                    params: { uid: this.key.uid, date: this.key.date }
+                    params: { uid: this.key.uid, date: this.currentDate }
                 }).then(res => {
                     console.log(res)
                     if (res.data.length) {
@@ -145,6 +185,7 @@
         position: fixed;
         color: #fff;
         text-align: center;
+        /* z-index: -1; */
     }
 
     .left {
@@ -176,6 +217,7 @@
         outline: none;
         text-align: center;
         font-size: 22px;
+        color: #000;
     }
 
     .content {
@@ -186,7 +228,7 @@
         flex-direction: column;
         align-items: center;
         margin-top: 180px;
-        z-index: 1;
+
     }
 
     .box_list {
