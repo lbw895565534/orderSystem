@@ -13,8 +13,9 @@
                     </div>
                     <div class="meal">
                         <div v-for="(item,index) in date1" class="mealSel">
-                            <input class="i" type="checkbox" name="date1" v-model="item.checked">
-                            <span>{{ item.value }}</span>
+                            <!-- <input class="i" type="checkbox" name="date1" v-model="item.checked"> -->
+                            <el-checkbox v-model="item.checked" :label="item.value" border fill="#fd737e"></el-checkbox>
+                            <!-- <span>{{ item.value }}</span> -->
                         </div>
                     </div>
                 </div>
@@ -27,8 +28,9 @@
                     </div>
                     <div class="meal">
                         <div v-for="(item,index) in date2" class="mealSel">
-                            <input class="i" type="checkbox" name="date2" id="" v-model="item.checked">
-                            <span>{{ item.value }}</span>
+                            <!-- <input class="i" type="checkbox" name="date2" id="" v-model="item.checked"> -->
+                            <el-checkbox v-model="item.checked" :label="item.value" border fill="#fd737e"></el-checkbox>
+                            <!-- <span>{{ item.value }}</span> -->
                         </div>
                     </div>
                 </div>
@@ -44,6 +46,9 @@
 <script>
     import axios from 'Axios';
     export default {
+        components: {
+            Confirm
+        },
         data() {
             return {
                 today: "",
@@ -106,33 +111,46 @@
                     this.date2[3].checked == 1 ? temp.nightsnack = 1 : temp.nightsnack = 0;
                 }
 
-                axios.get('http://127.0.0.1:3000/users/findRecordByDate', {
+                axios.get('http://192.168.2.220:3000/users/findRecordByDate', {
                     params: { uid: temp.uid, date: temp.date }
                 }).then(res => {
                     if (res.data.length) {
                         console.log("已存在");
+                        this.$confirm('该日期已经提交过订餐，是否覆盖修改, 是否继续?', '提示', {
+                            confirmButtonText: '确定',
+                            cancelButtonText: '取消',
+                            type: 'warning'
+                        }).then(() => {
+                            axios.get('http://192.168.2.220:3000/users/alterMeal', {
+                                params: temp
+                            }).then(res => {
+                                if (res.data) {
+                                    console.log("记录已更新！");
 
-                        axios.get('http://127.0.0.1:3000/users/alterMeal', {
-                            params:temp
-                        }).then(res => {
-                            if (res.data) {                                
-                                console.log(res.data);
-                            }
-                            else {
-                                console.log("请求失败！");
-                            }
-                        }).catch(err => {
-                            console.log('请求失败:' + err.status + ',' + err.statusText);
+                                }
+                                else {
+                                    console.log("请求失败！");
+                                }
+                            }).catch(err => {
+                                console.log('请求失败:' + err.status + ',' + err.statusText);
+                            });
+                        }).catch(() => {
+                            this.$message({
+                                type: 'info',
+                                message: '已取消删除'
+                            });
                         });
+
+
                     }
                     else {
                         console.log("无记录！");
-
-                        axios.get('http://127.0.0.1:3000/users/insertMeal', {
-                            params:temp
+                        axios.get('http://192.168.2.220:3000/users/insertMeal', {
+                            params: temp
                         }).then(res => {
-                            if (res.data) {                                
-                                console.log(res.data);
+                            if (res.data) {
+                                console.log("记录已添加！");
+
                             }
                             else {
                                 console.log("请求失败！");
@@ -205,7 +223,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin-top: 64px;
+        margin-top: 72px;
         z-index: 2;
     }
 
@@ -216,7 +234,7 @@
         background: #fff;
         overflow: hidden;
         margin-bottom: 10px;
-        box-shadow: 0 0 15px 0px #5BC8FF;
+        box-shadow: 0 0 10px 0px #ff9800;
         /* box-shadow: 0 1px 10px 0 #999; */
     }
 
@@ -231,7 +249,7 @@
     }
 
     .meal {
-        height: 120px;
+        height: 132px;
         text-align: center;
     }
 
@@ -241,20 +259,11 @@
         display: inline-block;
     }
 
-    .mealSel input {
-        width: 24px;
-        height: 24px;
-        position: relative;
-        top: 18px;
-        vertical-align: middle;
+    .mealSel .el-checkbox.is-bordered {
+        width: 120px;
+        margin-top: 15px;
     }
 
-    .mealSel span {
-        position: relative;
-        top: 18px;
-        vertical-align: middle;
-        font-size: 24px;
-    }
 
     .submit {
         width: 90%;

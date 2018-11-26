@@ -21,7 +21,7 @@
             login() {
                 console.log("username:" + this.username);
                 console.log("password:" + this.password);
-                axios.get('http://127.0.0.1:3000/users/findUser', {
+                axios.get('http://192.168.2.220:3000/users/findUser', {
                     params: { username: this.username, password: this.password }
                 }).then(res => {
                     console.log(res)

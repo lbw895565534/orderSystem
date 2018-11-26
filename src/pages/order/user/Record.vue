@@ -62,7 +62,7 @@
                 this.$router.push({ name: 'Order' });
             },
             getRecord() {
-                axios.get('http://127.0.0.1:3000/users/findRecordById', {
+                axios.get('http://192.168.2.220:3000/users/findRecordById', {
                     params: { uid: this.key.uid }
                 }).then(res => {
                     if (res.data.length) {
@@ -77,7 +77,7 @@
                 });
             },
             searchRecord() {
-                axios.get('http://127.0.0.1:3000/users/findRecordByDate', {
+                axios.get('http://192.168.2.220:3000/users/findRecordByDate', {
                     params: { uid: this.key.uid, date: this.key.date }
                 }).then(res => {
                     console.log(res)
@@ -180,12 +180,12 @@
 
     .content {
         width: 100%;
-        height: 500px;
+        height: 400px;
         overflow: scroll;
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin-top: 128px;
+        margin-top: 180px;
         z-index: 1;
     }
 
