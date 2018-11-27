@@ -9,13 +9,13 @@
                     <input type="text" @click="show = true" :value="currentDate" readonly>
 
                     <van-popup v-model="show" style="width: 80%;">
-                        <van-datetime-picker type="date" v-model="dateTemp" @confirm="searchRecord()" @cancel="show = false"/>
+                        <van-datetime-picker type="date" v-model="dateTemp" :min-date="minDate" @confirm="searchRecord()" @cancel="show = false"/>
                     </van-popup>
                 </div>
             </div>
             <div class="content">
                 <div class="box_list">
-                    <div class="item" v-for="(item,index) in data">
+                    <div class="item" v-for="(item,index) in data" >
                         <div class="pic">
                             <div class="pic_meal">
                                 <div class="i">
@@ -53,6 +53,7 @@
 <script>
     import axios from 'Axios';
     import { Popup } from 'vant';
+    import { Dialog } from 'vant';
     export default {
         data() {
             return {
@@ -62,7 +63,8 @@
                 key: { uid: 1, date: "" },
                 show: false,
                 dateTemp: "",
-                currentDate:  this.getNowFormatDate()
+                minDate: new Date(2018,11,1),
+                currentDate:  ""
             }
         },
         watch: {
@@ -109,6 +111,7 @@
                         this.dealData();
                     }
                     else {
+                        this.data = res.data;
                         alert("无记录！")
                     }
                 }).catch(err => {
@@ -117,15 +120,18 @@
             },
             searchRecord() {
                 this.show = false;
-                axios.get('http://192.168.2.220:3000/users/findRecordByDate', {
+                console.log(this.currentDate);
+                axios.get('http://192.168.2.220:3000/users/findRecordByDateId', {
                     params: { uid: this.key.uid, date: this.currentDate }
                 }).then(res => {
                     console.log(res)
                     if (res.data.length) {
                         this.data = res.data;
+                        
                     }
                     else {
-                        alert("无记录！")
+                        this.data = res.data;
+                        this.dealData();
                     }
                 }).catch(err => {
                     console.log('请求失败:' + err.status + ',' + err.statusText);
@@ -155,7 +161,6 @@
         // 挂载完成时
         mounted() {
             this.getRecord();
-            this.dealData();
         },
     }
 </script>
@@ -189,15 +194,15 @@
     }
 
     .left {
-        width: 32px;
-        height: 32px;
+        width: 28px;
+        height: 28px;
         float: left;
         margin-left: 10px;
     }
 
     .right {
-        width: 32px;
-        height: 32px;
+        width: 28px;
+        height: 28px;
         float: right;
         margin-right: 10px;
     }

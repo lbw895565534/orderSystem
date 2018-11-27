@@ -216,14 +216,15 @@
 
 
     .left {
-        width: 32px;
-        height: 32px;
+        width: 28px;
+        height: 28px;
         float: left;
         margin-left: 10px
     }
 
     .right {
-        width: 32px;
+        width: 28px;
+        height: 28px;
         float: right;
         margin-right: 10px
     }
