@@ -126,8 +126,7 @@
                 }).then(res => {
                     console.log(res)
                     if (res.data.length) {
-                        this.data = res.data;
-                        
+                        this.data = res.data;                        
                     }
                     else {
                         this.data = res.data;
@@ -181,15 +180,16 @@
     }
 
     .top {
-        height: 150px;
+        height: 56px;
         width: 100%;
-        padding-top: 8px;
         font-size: 24px;
-        padding-top: 10px;
-        background: #5BC8FF;
-        position: fixed;
+        background: #00bdd2;
+        position: relative;
+        top: 0;
         color: #fff;
         text-align: center;
+        line-height: 56px;
+        box-shadow: 0 0 5px 0 #9c9c9c;
         /* z-index: -1; */
     }
 
@@ -198,6 +198,7 @@
         height: 28px;
         float: left;
         margin-left: 10px;
+        margin-top: 14px;
     }
 
     .right {
@@ -205,6 +206,7 @@
         height: 28px;
         float: right;
         margin-right: 10px;
+        margin-top: 14px;
     }
 
     .search {

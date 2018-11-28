@@ -14,7 +14,7 @@
                     <div class="meal">
                         <div v-for="(item,index) in date1" class="mealSel">
                             <!-- <input class="i" type="checkbox" name="date1" v-model="item.checked"> -->
-                            <el-checkbox v-model="item.checked" :label="item.value" border fill="#fd737e"></el-checkbox>
+                            <el-checkbox v-model="item.checked" :label="item.value" border fill="#fd737e" :disabled="item.disabled"></el-checkbox>
                             <!-- <span>{{ item.value }}</span> -->
                         </div>
                     </div>
@@ -29,7 +29,7 @@
                     <div class="meal">
                         <div v-for="(item,index) in date2" class="mealSel">
                             <!-- <input class="i" type="checkbox" name="date2" id="" v-model="item.checked"> -->
-                            <el-checkbox v-model="item.checked" :label="item.value" border fill="#fd737e"></el-checkbox>
+                            <el-checkbox v-model="item.checked" :label="item.value" border fill="#fd737e" :disabled="item.disabled"></el-checkbox>
                             <!-- <span>{{ item.value }}</span> -->
                         </div>
                     </div>
@@ -52,16 +52,16 @@
                 today: "",
                 tommorrow: "",
                 date1: [
-                    { value: '早餐', checked: false },
-                    { value: '午餐', checked: false },
-                    { value: '晚餐', checked: false },
-                    { value: '夜宵', checked: false },
+                    { value: '早餐', checked: false, disabled: false },
+                    { value: '午餐', checked: false, disabled: false },
+                    { value: '晚餐', checked: false, disabled: false },
+                    { value: '夜宵', checked: false, disabled: false },
                 ],
                 date2: [
-                    { value: '早餐', checked: false },
-                    { value: '午餐', checked: false },
-                    { value: '晚餐', checked: false },
-                    { value: '夜宵', checked: false },
+                    { value: '早餐', checked: false, disabled: false },
+                    { value: '午餐', checked: false, disabled: false },
+                    { value: '晚餐', checked: false, disabled: false },
+                    { value: '夜宵', checked: false, disabled: false },
                 ],
                 uid: 1
             }
@@ -118,26 +118,26 @@
                             title: temp.date + '已经存在订餐',
                             message: '是否覆盖订餐记录？'
                         }).then(() => {
-                        axios.get('http://192.168.2.220:3000/users/alterMeal', {
-                            params: temp
-                        }).then(res => {
-                            if (res.data) {
-                                Dialog.alert({
-                                    message: '订餐记录已经更新'
-                                }).then(() => {
-                                    // on close
-                                });
-                            }
-                            else {
-                                Dialog.alert({
-                                    message: '请求失败，请重试'
-                                }).then(() => {
-                                    // on close
-                                });
-                            }
-                        }).catch(err => {
-                            console.log('请求失败:' + err.status + ',' + err.statusText);
-                        });
+                            axios.get('http://192.168.2.220:3000/users/alterMeal', {
+                                params: temp
+                            }).then(res => {
+                                if (res.data) {
+                                    Dialog.alert({
+                                        message: '订餐记录已经更新'
+                                    }).then(() => {
+                                        // on close
+                                    });
+                                }
+                                else {
+                                    Dialog.alert({
+                                        message: '请求失败，请重试'
+                                    }).then(() => {
+                                        // on close
+                                    });
+                                }
+                            }).catch(err => {
+                                console.log('请求失败:' + err.status + ',' + err.statusText);
+                            });
                         }).catch(() => {
                             Dialog.alert({
                                 message: '已经取消'
@@ -193,6 +193,8 @@
         width: 100%;
         height: 100%;
         position: relative;
+        background: #fff;
+
     }
 
     .box {
@@ -203,30 +205,33 @@
     }
 
     .top {
-        height: 150px;
+        height: 56px;
         width: 100%;
-        padding-top: 8px;
         font-size: 24px;
-        padding-top: 10px;
-        background: #5BC8FF;
-        position: fixed;
+        background: #00bdd2;
+        position: relative;
+        top: 0;
         color: #fff;
         text-align: center;
+        line-height: 56px;
+        box-shadow: 0 0 5px 0 #9c9c9c;
+        /* z-index: -1; */
     }
-
 
     .left {
         width: 28px;
         height: 28px;
         float: left;
-        margin-left: 10px
+        margin-left: 10px;
+        margin-top: 14px;
     }
 
     .right {
         width: 28px;
         height: 28px;
         float: right;
-        margin-right: 10px
+        margin-right: 10px;
+        margin-top: 14px;
     }
 
     .content {
@@ -235,7 +240,7 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin-top: 72px;
+        margin-top: 20px;
         z-index: 2;
     }
 
