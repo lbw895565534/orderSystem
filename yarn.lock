@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-"@babel/runtime@^7.1.2":
+"@babel/runtime@^7.1.5":
   version "7.1.5"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.1.5.tgz#4170907641cf1f61508f563ece3725150cc6fe39"
   dependencies:
@@ -5367,11 +5367,11 @@ validate-npm-package-license@^3.0.1:
     spdx-correct "^3.0.0"
     spdx-expression-parse "^3.0.0"
 
-vant@^1.4.5:
-  version "1.4.5"
-  resolved "https://registry.yarnpkg.com/vant/-/vant-1.4.5.tgz#d5a23c07b1abcc521d798ba988f8fa45f6d2cc14"
+vant@^1.4.7:
+  version "1.4.7"
+  resolved "https://registry.yarnpkg.com/vant/-/vant-1.4.7.tgz#8de2ffd6b5ba36203069a505cb6369d49c4d3766"
   dependencies:
-    "@babel/runtime" "^7.1.2"
+    "@babel/runtime" "^7.1.5"
     vue-lazyload "1.2.3"
 
 vary@~1.1.2:
@@ -5387,6 +5387,10 @@ vm-browserify@0.0.4:
   resolved "https://registry.yarnpkg.com/vm-browserify/-/vm-browserify-0.0.4.tgz#5d7ea45bbef9e4a6ff65f95438e0a87c357d5a73"
   dependencies:
     indexof "0.0.1"
+
+vue-cookies@^1.5.7:
+  version "1.5.7"
+  resolved "https://registry.yarnpkg.com/vue-cookies/-/vue-cookies-1.5.7.tgz#44b3940b0cbb853ba3f7848f1905cb127ec45eb4"
 
 vue-hot-reload-api@^2.2.0:
   version "2.3.1"

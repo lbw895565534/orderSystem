@@ -10,29 +10,46 @@
 
 <script>
     import axios from 'Axios';
+    import { Dialog } from 'vant';
     export default {
         data() {
             return {
                 username: "",
-                password: ""
+                password: "",
             }
+        },
+        mounted() {
+            
         },
         methods: {
             login() {
-                console.log("username:" + this.username);
-                console.log("password:" + this.password);
+
                 axios.get('http://192.168.2.220:3000/users/findUser', {
                     params: { username: this.username, password: this.password }
                 }).then(res => {
-                    console.log(res.data[0].rule)
+                   
                     if (res.data.length) {
-                        if (res.data[0].rule == 1){
-                            this.$router.push({ name: 'OReport' });
+                        console.info(res.data[0].username);
+                        if(window.localStorage) {
+                            window.localStorage.setItem("id", res.data[0].id);
+                            window.localStorage.setItem("name", res.data[0].name);
+                            window.localStorage.setItem("rule", res.data[0].rule);
+                            window.localStorage.setItem("username", res.data[0].username);
+                            window.localStorage.setItem("password", res.data[0].password);
+                            window.localStorage.setItem("job", res.data[0].job);
+                            console.info(window.localStorage.getItem('rule'))
+                        }else {
+                            console.log("localstorage不存在")
                         }
-                        if (res.data[0].rule == 2){
-                            this.$router.push({ name: 'Order' });
-                        }
-                        
+                        setTimeout(function () {
+                            if (localStorage.getItem('rule') == 1) {
+                                this.$router.push({ name: 'OReport' });
+                            }
+                            if (localStorage.getItem('rule') == 2) {
+                                this.$router.push({ name: 'Order' });
+                            }
+                        }.bind(this), 1000)
+
                     }
                     else {
                         alert("账号或密码错误！")

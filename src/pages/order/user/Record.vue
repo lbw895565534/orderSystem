@@ -60,10 +60,10 @@
                 today: "",
                 tommorrow: "",
                 data: [],
-                key: { uid: 1, date: "" },
+                key: { uid: window.localStorage.getItem("id"), date: "" },
                 show: false,
                 dateTemp: "",
-                minDate: new Date(2018,11,1),
+                minDate: new Date(2018,10,25),
                 currentDate:  ""
             }
         },
@@ -89,7 +89,7 @@
                 var seperator1 = "-";
                 var year = date.getFullYear();
                 var month = date.getMonth() + 1;
-                var strDate = date.getDate();
+                var strDate = date.getDate() ;
                 if (month >= 1 && month <= 9) {
                     month = "0" + month;
                 }
@@ -107,6 +107,7 @@
                     params: { uid: this.key.uid }
                 }).then(res => {
                     if (res.data.length) {
+                        res.data.date = res.data.date +1;
                         this.data = res.data;
                         this.dealData();
                     }
@@ -126,7 +127,8 @@
                 }).then(res => {
                     console.log(res)
                     if (res.data.length) {
-                        this.data = res.data;                        
+                        this.data = res.data;   
+                        this.dealData()                     
                     }
                     else {
                         this.data = res.data;
@@ -180,7 +182,6 @@
     }
 
     .top {
-        height: 56px;
         width: 100%;
         font-size: 24px;
         background: #00bdd2;
@@ -211,7 +212,7 @@
 
     .search {
         width: 100%;
-        height: 100px;
+        height: 80px;
     }
 
     .search input {
@@ -225,17 +226,18 @@
         text-align: center;
         font-size: 22px;
         color: #000;
+        line-height: 36px;
     }
 
     .content {
         width: 100%;
-        height: 400px;
+        height: 100%;
+        max-height: 500px;
         overflow: scroll;
         display: flex;
         flex-direction: column;
         align-items: center;
-        margin-top: 180px;
-
+        margin-top: 20px;
     }
 
     .box_list {
@@ -287,7 +289,6 @@
 
     .item .detail {
         display: flex;
-        align-items: center;
         justify-content: center;
         flex-direction: column;
         padding-left: 10px;

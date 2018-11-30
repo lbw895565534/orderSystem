@@ -3,7 +3,7 @@
         <div class="box">
             <div class="top">
                 <img src="@/assets/img/back.svg" alt="" class="left" @click="back()">
-                <span>订餐</span>
+                <span>{{ name }}</span>
                 <img src="@/assets/img/record.svg" alt="" class="right" @click="toRecord()">
             </div>
             <div class="content">
@@ -46,6 +46,7 @@
 <script>
     import axios from 'Axios';
     import { Dialog } from 'vant';
+    import { Toast } from 'vant';
     export default {
         data() {
             return {
@@ -55,15 +56,16 @@
                     { value: '早餐', checked: false, disabled: false },
                     { value: '午餐', checked: false, disabled: false },
                     { value: '晚餐', checked: false, disabled: false },
-                    { value: '夜宵', checked: false, disabled: false },
+
                 ],
                 date2: [
                     { value: '早餐', checked: false, disabled: false },
                     { value: '午餐', checked: false, disabled: false },
                     { value: '晚餐', checked: false, disabled: false },
-                    { value: '夜宵', checked: false, disabled: false },
+
                 ],
-                uid: 1
+                id: window.localStorage.getItem("id"),
+                name: window.localStorage.getItem("name"),
             }
         },
         methods: {
@@ -87,26 +89,35 @@
                 console.log(this.date1);
             },
             back() {
-                this.$router.push({ name: 'OLogin' });
+                Dialog.confirm({
+                            message: '确定注销当前用户吗'
+                        }).then(() => {
+                            localStorage.clear();
+                            Toast('注销成功');
+                            this.$router.push({ name: 'OLogin' });
+                        }).catch(() => {
+                            
+                        });
+                
             },
             toRecord() {
                 this.$router.push({ name: 'ORecord' });
             },
             submit(flag) {
-                var temp = { uid: this.uid, date: "", breakfast: 0, lunch: 0, dinner: 0, nightsnack: 0 };
+                var temp = { uid: this.id, date: "", breakfast: 0, lunch: 0, dinner: 0, nightsnack: 0 };
                 if (flag == 1) {
                     temp.date = this.today.toString();
                     this.date1[0].checked == 1 ? temp.breakfast = 1 : temp.breakfast = 0;
                     this.date1[1].checked == 1 ? temp.lunch = 1 : temp.lunch = 0;
                     this.date1[2].checked == 1 ? temp.dinner = 1 : temp.dinner = 0;
-                    this.date1[3].checked == 1 ? temp.nightsnack = 1 : temp.nightsnack = 0;
+                    // this.date1[3].checked == 1 ? temp.nightsnack = 1 : temp.nightsnack = 0;
                 }
                 if (flag == 2) {
                     temp.date = this.tommorrow;
                     this.date2[0].checked == 1 ? temp.breakfast = 1 : temp.breakfast = 0;
                     this.date2[1].checked == 1 ? temp.lunch = 1 : temp.lunch = 0;
                     this.date2[2].checked == 1 ? temp.dinner = 1 : temp.dinner = 0;
-                    this.date2[3].checked == 1 ? temp.nightsnack = 1 : temp.nightsnack = 0;
+                    // this.date2[3].checked == 1 ? temp.nightsnack = 1 : temp.nightsnack = 0;
                 }
 
                 axios.get('http://192.168.2.220:3000/users/findRecordByDate', {
@@ -154,23 +165,21 @@
                             message: "是否提交订餐？"
                         }).then(() => {
                             // on confirm
+                            axios.get('http://192.168.2.220:3000/users/insertMeal', {
+                                params: temp
+                            }).then(res => {
+                                if (res.data) {
+                                    console.log("记录已添加！");
+                                }
+                                else {
+                                    console.log("请求失败！");
+                                }
+                            }).catch(err => {
+                                console.log('请求失败:' + err.status + ',' + err.statusText);
+                            });
                         }).catch(() => {
                             // on cancel
                         });
-                        axios.get('http://192.168.2.220:3000/users/insertMeal', {
-                            params: temp
-                        }).then(res => {
-                            if (res.data) {
-                                console.log("记录已添加！");
-                            }
-                            else {
-                                console.log("请求失败！");
-                            }
-                        }).catch(err => {
-                            console.log('请求失败:' + err.status + ',' + err.statusText);
-                        });
-
-
                     }
                 }).catch(err => {
                     console.log('请求失败:' + err.status + ',' + err.statusText);
@@ -179,10 +188,12 @@
         },
         // 创建完成时
         created() {
+            this.id = window.localStorage.getItem("id");
             this.creatDate();
         },
         // 挂载完成时
         mounted() {
+            this.id = window.localStorage.getItem("id");
             this.creatDate();
         },
     }
@@ -193,8 +204,6 @@
         width: 100%;
         height: 100%;
         position: relative;
-        background: #fff;
-
     }
 
     .box {
