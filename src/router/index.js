@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Home from '@/pages/main/Home'
 import OReport from '@/pages/order/admin/Report'
 import OLogin from '@/pages/order/login/Login'
+import OSetpassword from '@/pages/order/login/Setpassword'
 import Order from '@/pages/order/user/Order'
 import ORecord from '@/pages/order/user/Record'
 
@@ -24,6 +25,11 @@ export default new Router({
       path: '/report',
       name: 'OReport',
       component: OReport,
+    },
+    {
+      path: '/setpassword',
+      name: 'OSetpassword',
+      component: OSetpassword
     },
     {
       path: '/order',

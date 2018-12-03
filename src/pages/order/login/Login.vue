@@ -18,37 +18,40 @@
                 password: "",
             }
         },
-        mounted() {
-            
-        },
         methods: {
             login() {
 
                 axios.get('http://192.168.2.220:3000/users/findUser', {
                     params: { username: this.username, password: this.password }
                 }).then(res => {
-                   
+
                     if (res.data.length) {
-                        console.info(res.data[0].username);
-                        if(window.localStorage) {
-                            window.localStorage.setItem("id", res.data[0].id);
-                            window.localStorage.setItem("name", res.data[0].name);
-                            window.localStorage.setItem("rule", res.data[0].rule);
-                            window.localStorage.setItem("username", res.data[0].username);
-                            window.localStorage.setItem("password", res.data[0].password);
-                            window.localStorage.setItem("job", res.data[0].job);
-                            console.info(window.localStorage.getItem('rule'))
-                        }else {
-                            console.log("localstorage不存在")
+                        // 如果密码为空，跳转至设置密码页面
+                        if (res.data[0].password) {
+                            console.info(res.data[0].username);
+                            if (window.localStorage) {
+                                window.localStorage.setItem("id", res.data[0].id);
+                                window.localStorage.setItem("name", res.data[0].name);
+                                window.localStorage.setItem("rule", res.data[0].rule);
+                                window.localStorage.setItem("username", res.data[0].username);
+                                window.localStorage.setItem("password", res.data[0].password);
+                                window.localStorage.setItem("job", res.data[0].job);
+                                console.info(window.localStorage.getItem('rule'))
+                            } else {
+                                console.log("localstorage不存在")
+                            }
+                            setTimeout(function () {
+                                if (localStorage.getItem('rule') == 1) {
+                                    this.$router.push({ name: 'OReport' });
+                                }
+                                if (localStorage.getItem('rule') == 2) {
+                                    this.$router.push({ name: 'Order' });
+                                }
+                            }.bind(this), 1000)
                         }
-                        setTimeout(function () {
-                            if (localStorage.getItem('rule') == 1) {
-                                this.$router.push({ name: 'OReport' });
-                            }
-                            if (localStorage.getItem('rule') == 2) {
-                                this.$router.push({ name: 'Order' });
-                            }
-                        }.bind(this), 1000)
+                        if (!res.data[0].password) {
+                            this.$router.push({name: 'Setpassword'})
+                        }
 
                     }
                     else {

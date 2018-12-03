@@ -9,13 +9,14 @@
                     <input type="text" @click="show = true" :value="currentDate" readonly>
 
                     <van-popup v-model="show" style="width: 80%;">
-                        <van-datetime-picker type="date" v-model="dateTemp" :min-date="minDate" @confirm="searchRecord()" @cancel="show = false"/>
+                        <van-datetime-picker type="date" v-model="dateTemp" :min-date="minDate" @confirm="searchRecord()" @cancel="show = false"
+                        />
                     </van-popup>
                 </div>
             </div>
             <div class="content">
                 <div class="box_list">
-                    <div class="item" v-for="(item,index) in data" >
+                    <div class="item" v-for="(item,index) in data">
                         <div class="pic">
                             <div class="pic_meal">
                                 <div class="i">
@@ -54,6 +55,7 @@
     import axios from 'Axios';
     import { Popup } from 'vant';
     import { Dialog } from 'vant';
+    import { Toast } from 'vant';
     export default {
         data() {
             return {
@@ -63,8 +65,10 @@
                 key: { uid: window.localStorage.getItem("id"), date: "" },
                 show: false,
                 dateTemp: "",
-                minDate: new Date(2018,10,25),
-                currentDate:  ""
+                minDate: new Date(2018, 10, 25),
+                currentDate: "",
+                id: window.localStorage.getItem("id"),
+                name: window.localStorage.getItem("name"),
             }
         },
         watch: {
@@ -83,13 +87,13 @@
                 this.currentDate = currentdate;
             }
         },
-        methods: {            
+        methods: {
             getNowFormatDate() {
                 var date = new Date();
                 var seperator1 = "-";
                 var year = date.getFullYear();
                 var month = date.getMonth() + 1;
-                var strDate = date.getDate() ;
+                var strDate = date.getDate();
                 if (month >= 1 && month <= 9) {
                     month = "0" + month;
                 }
@@ -102,12 +106,22 @@
             back() {
                 this.$router.push({ name: 'Order' });
             },
+            showDate() {
+                
+                if (!this.id) {
+                    Toast('请先登录！');
+                    this.$router.push({ name: 'OLogin' });
+                }
+                if (this.id) {
+                    this.show = true;
+                }
+            },
             getRecord() {
                 axios.get('http://192.168.2.220:3000/users/findRecordById', {
                     params: { uid: this.key.uid }
                 }).then(res => {
                     if (res.data.length) {
-                        res.data.date = res.data.date +1;
+                        res.data.date = res.data.date + 1;
                         this.data = res.data;
                         this.dealData();
                     }
@@ -127,8 +141,8 @@
                 }).then(res => {
                     console.log(res)
                     if (res.data.length) {
-                        this.data = res.data;   
-                        this.dealData()                     
+                        this.data = res.data;
+                        this.dealData()
                     }
                     else {
                         this.data = res.data;

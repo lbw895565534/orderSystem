@@ -72,6 +72,13 @@
             getDate(num, str) {
                 var today = new Date();
                 var nowTime = today.getTime();
+                var nowHour = today.getHours();
+                console.log(nowHour);
+
+                // 根据时间关闭餐次
+                nowHour > 3?this.date1[0].disabled = true:this.date1[0].disabled = false;
+                nowHour > 8?this.date1[1].disabled = true:this.date1[1].disabled = false;
+                nowHour > 14?this.date1[2].disabled = true:this.date1[2].disabled = false;
                 var ms = 24 * 3600 * 1000 * num;
                 today.setTime(parseInt(nowTime + ms));
                 var oYear = today.getFullYear();
@@ -89,16 +96,18 @@
                 console.log(this.date1);
             },
             back() {
-                Dialog.confirm({
-                            message: '确定注销当前用户吗'
-                        }).then(() => {
-                            localStorage.clear();
-                            Toast('注销成功');
-                            this.$router.push({ name: 'OLogin' });
-                        }).catch(() => {
-                            
-                        });
-                
+                if (this.id) {
+                    Dialog.confirm({
+                        message: '确定注销当前用户吗'
+                    }).then(() => {
+                        localStorage.clear();
+                        Toast('注销成功');
+                        this.$router.push({ name: 'OLogin' });
+                    }).catch(() => {
+
+                    });
+                }
+                this.$router.push({ name: 'OLogin' });
             },
             toRecord() {
                 this.$router.push({ name: 'ORecord' });
