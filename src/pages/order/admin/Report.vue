@@ -109,7 +109,7 @@
                 }).catch(err => {
                     console.log('请求失败:' + err.status + ',' + err.statusText);
                 });
-                axios.get('http://192.168.2.220:3000/users/findLunchByDate', {
+                axios.get('http://172.16.28.112:3000/users/findLunchByDate', {
                     params: {date: this.currentDate}
                 }).then(res => {
                     if (res.data.length) {
@@ -122,7 +122,7 @@
                 }).catch(err => {
                     console.log('请求失败:' + err.status + ',' + err.statusText);
                 });
-                axios.get('http://192.168.2.220:3000/users/findDinnerByDate', {
+                axios.get('http://172.16.28.112:3000/users/findDinnerByDate', {
                     params: {date: this.currentDate}
                 }).then(res => {
                     if (res.data.length) {

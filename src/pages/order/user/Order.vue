@@ -129,7 +129,7 @@
                     // this.date2[3].checked == 1 ? temp.nightsnack = 1 : temp.nightsnack = 0;
                 }
 
-                axios.get('http://192.168.2.220:3000/users/findRecordByDate', {
+                axios.get('http://172.16.28.112:3000/users/findRecordByDate', {
                     params: { uid: temp.uid, date: temp.date }
                 }).then(res => {
                     if (res.data.length) {
@@ -138,7 +138,7 @@
                             title: temp.date + '已经存在订餐',
                             message: '是否覆盖订餐记录？'
                         }).then(() => {
-                            axios.get('http://192.168.2.220:3000/users/alterMeal', {
+                            axios.get('http://172.16.28.112:3000/users/alterMeal', {
                                 params: temp
                             }).then(res => {
                                 if (res.data) {
@@ -174,7 +174,7 @@
                             message: "是否提交订餐？"
                         }).then(() => {
                             // on confirm
-                            axios.get('http://192.168.2.220:3000/users/insertMeal', {
+                            axios.get('http://172.16.28.112:3000/users/insertMeal', {
                                 params: temp
                             }).then(res => {
                                 if (res.data) {

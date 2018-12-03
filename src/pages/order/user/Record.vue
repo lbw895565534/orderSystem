@@ -117,7 +117,7 @@
                 }
             },
             getRecord() {
-                axios.get('http://192.168.2.220:3000/users/findRecordById', {
+                axios.get('http://172.16.28.112:3000/users/findRecordById', {
                     params: { uid: this.key.uid }
                 }).then(res => {
                     if (res.data.length) {
@@ -136,7 +136,7 @@
             searchRecord() {
                 this.show = false;
                 console.log(this.currentDate);
-                axios.get('http://192.168.2.220:3000/users/findRecordByDateId', {
+                axios.get('http://172.16.28.112:3000/users/findRecordByDateId', {
                     params: { uid: this.key.uid, date: this.currentDate }
                 }).then(res => {
                     console.log(res)
