@@ -20,11 +20,9 @@
         },
         methods: {
             login() {
-
-                axios.get('http://172.16.28.112:3000/users/findUser', {
+                axios.get('http://119.23.189.182:80/users/findUser', {
                     params: { username: this.username, password: this.password }
                 }).then(res => {
-
                     if (res.data.length) {
                         // 如果密码为空，跳转至设置密码页面
                         if (res.data[0].password) {
@@ -55,6 +53,7 @@
 
                     }
                     else {
+                        console.log(res.data);
                         alert("账号或密码错误！")
                     }
                 }).catch(err => {

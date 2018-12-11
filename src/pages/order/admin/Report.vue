@@ -10,30 +10,49 @@
                 <input type="text" @click="show = true" :value="currentDate" readonly>
 
                 <van-popup v-model="show" style="width: 80%;">
-                    <van-datetime-picker type="date" v-model="dateTemp" :min-date="minDate" @confirm="getRecord()" @cancel="show = false"
-                    />
+                    <van-datetime-picker type="date" v-model="dateTemp" :min-date="minDate" @confirm="getRecord()" @cancel="show = false" />
                 </van-popup>
             </div>
 
             <div class="content">
-                
                 <div class="box_list">
                     <div class="title">订餐人数统计</div>
                     <hr style="height:1px;width:80%;margin:auto;background-color:#ddd;border: none;">
                     <div class="box_item">
                         <div class="item">
-                                <span class="mark">{{ data.breakfast }}</span>
-                                <span class="info">早餐</span>
-                            </div>
-                            <div class="item">
-                                <span class="mark">{{ data.lunch }}</span>
-                                <span class="info">午餐</span>
-                            </div>
-                            <div class="item">
-                                <span class="mark">{{ data.dinner }}</span>
-                                <span class="info">晚餐</span>
-                            </div>
+                            <span class="mark">{{ data.breakfast }}</span>
+                            <span class="info">早餐</span>
+                        </div>
+                        <div class="item">
+                            <span class="mark">{{ data.lunch }}</span>
+                            <span class="info">午餐</span>
+                        </div>
+                        <div class="item">
+                            <span class="mark">{{ data.dinner }}</span>
+                            <span class="info">晚餐</span>
+                        </div>
                     </div>
+                </div>
+            </div>
+
+            <div class="lists">
+                <div class="list list-b">
+                    <div class="title">
+                        <span>早餐</span>                        
+                    </div>
+                    <span class="i" v-for="(n,index) in lists.b">{{ n }}</span>
+                </div>
+                <div class="list list-l">
+                    <div class="title">
+                        <span>午餐</span>
+                    </div>
+                    <span class="i" v-for="(n,index) in lists.l">{{ n }}</span>
+                </div>
+                <div class="list list-d">
+                    <div class="title">
+                        <span>晚餐</span>
+                    </div>
+                    <span class="i" v-for="(n,index) in lists.d">{{ n }}</span>
                 </div>
             </div>
         </div>
@@ -53,11 +72,13 @@
                 today: "",
                 tommorrow: "",
                 result: [],
-                data: {breakfast: 0, lunch: 0, dinner: 0},                
+                data: { breakfast: 0, lunch: 0, dinner: 0 },
                 show: false,
                 dateTemp: "",
                 minDate: new Date(2018, 11, 1),
-                currentDate: this.getNowFormatDate()
+                currentDate: this.getNowFormatDate(),
+                active: 0,
+                lists: {b: [], l: [], d: []}
             }
         },
         watch: {
@@ -96,41 +117,45 @@
                 this.$router.push({ name: 'OLogin' });
             },
             getRecord() {
-                axios.get('http://192.168.2.220:3000/users/findBreakfastByDate', {
-                    params: {date: this.currentDate}
+                this.lists.b = [];
+                this.lists.l = [];
+                this.lists.d = [];
+                this.data.breakfast = 0;
+                this.data.lunch = 0;
+                this.data.dinner = 0;
+                axios.get('http://119.23.189.182:80/users/findBreakfastByDate', {
+                    params: { date: this.currentDate }
                 }).then(res => {
                     if (res.data.length) {
-                        console.log("breakfast" + res);
-                    }
-                    else {
-                        this.data.breakfast = res.data;
-                        
+                        res.data.forEach(n=> {
+                            this.lists.b.push(n.name);
+                        })
+                        this.data.breakfast = this.lists.b.length;
                     }
                 }).catch(err => {
                     console.log('请求失败:' + err.status + ',' + err.statusText);
                 });
-                axios.get('http://172.16.28.112:3000/users/findLunchByDate', {
-                    params: {date: this.currentDate}
+                axios.get('http://119.23.189.182:80/users/findLunchByDate', {
+                    params: { date: this.currentDate }
                 }).then(res => {
                     if (res.data.length) {
-                        this.result = res.data;
-                    }
-                    else {
-                        this.data.lunch = res.data;
+                        console.log(1);
                         
-                    }
+                        this.data.lunch = this.lists.l.length;
+                    }         
+                    console.log(this.lists.l);              
                 }).catch(err => {
                     console.log('请求失败:' + err.status + ',' + err.statusText);
                 });
-                axios.get('http://172.16.28.112:3000/users/findDinnerByDate', {
-                    params: {date: this.currentDate}
+                axios.get('http://119.23.189.182:80/users/findDinnerByDate', {
+                    params: { date: this.currentDate }
                 }).then(res => {
                     if (res.data.length) {
-                        this.result = res.data;
-                    }
-                    else {
-                        this.data.dinner = res.data;
-                        
+                        res.data.forEach(n=> {
+                            this.lists.d.push(n.name);
+                        })
+                        console.log(this.lists.d)
+                        this.data.dinner = this.lists.d.length;
                     }
                 }).catch(err => {
                     console.log('请求失败:' + err.status + ',' + err.statusText);
@@ -217,7 +242,7 @@
 
     .content {
         width: 100%;
-        height: 400px;
+        height: 180px;
 
     }
 
@@ -229,9 +254,8 @@
         box-shadow: 0 0 15px 0 #ddd;
         position: relative;
         /* top: 10px; */
-       
-        
     }
+
     .box_list .title {
         width: 100%;
         height: 48px;
@@ -242,8 +266,8 @@
         line-height: 48px;
     }
 
-    .box_list .box_item {  
-        width: 100%;   
+    .box_list .box_item {
+        width: 100%;
         display: flex;
         flex-direction: row;
         align-items: center;
@@ -267,5 +291,49 @@
     .info {
         font-size: 18px;
         color: #666;
+    }
+
+    .lists {
+        width: 100%;
+        position: absolute;
+        top: 316px;
+        bottom: 0;
+        display: flex;
+        flex-direction: column;
+        overflow: scroll;
+        padding-bottom: 20px;
+    }
+
+    .list {
+        width: 90%;
+        height: 200px;
+        min-height: 200px;
+        margin: 0 auto;
+        margin-top: 20px;
+        border-radius: 10px;
+        overflow: hidden;
+        background: #fff;
+        box-shadow: 0 1px 5px 0px #b7b7b7
+    }
+
+    .list .title {
+        width: 100%;
+        height: 42px;
+        background: #73EBE1;
+        text-align: center;
+    }
+
+    .list .title span {
+        font-size: 24px;
+        color: #fff;
+        line-height: 42px;
+    }
+
+    .list .i {
+        width: 33%;
+        height: 30px;
+        line-height: 30px;
+        float: left;
+        text-align: center;
     }
 </style>

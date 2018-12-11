@@ -5,21 +5,23 @@
 </template>
 
 <script>
-export default {
-  name: 'App'
-}
+  export default {
+    name: 'App'
+  }
 </script>
 
 <style>
+  * {
+    text-decoration: none;
+    margin: 0;
+    padding: 0;
+  }
 
-* {
-  text-decoration: none;
-  margin: 0;
-  padding: 0;
-}
-#app {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-}
+  #app {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+  }
+
+
 </style>

@@ -65,7 +65,7 @@
                 key: { uid: window.localStorage.getItem("id"), date: "" },
                 show: false,
                 dateTemp: "",
-                minDate: new Date(2018, 10, 25),
+                minDate: new Date(2018, 11, 1),
                 currentDate: "",
                 id: window.localStorage.getItem("id"),
                 name: window.localStorage.getItem("name"),
@@ -76,7 +76,7 @@
                 var seperator1 = "-";
                 var year = val.getFullYear();
                 var month = val.getMonth() + 1;
-                var strDate = val.getDate();
+                var strDate = val.getDate() ;
                 if (month >= 1 && month <= 9) {
                     month = "0" + month;
                 }
@@ -107,7 +107,7 @@
                 this.$router.push({ name: 'Order' });
             },
             showDate() {
-                
+
                 if (!this.id) {
                     Toast('请先登录！');
                     this.$router.push({ name: 'OLogin' });
@@ -117,11 +117,10 @@
                 }
             },
             getRecord() {
-                axios.get('http://172.16.28.112:3000/users/findRecordById', {
+                axios.get('http://119.23.189.182:80/users/findRecordById', {
                     params: { uid: this.key.uid }
                 }).then(res => {
                     if (res.data.length) {
-                        res.data.date = res.data.date + 1;
                         this.data = res.data;
                         this.dealData();
                     }
@@ -136,7 +135,7 @@
             searchRecord() {
                 this.show = false;
                 console.log(this.currentDate);
-                axios.get('http://172.16.28.112:3000/users/findRecordByDateId', {
+                axios.get('http://119.23.189.182:80/users/findRecordByDateId', {
                     params: { uid: this.key.uid, date: this.currentDate }
                 }).then(res => {
                     console.log(res)
@@ -168,7 +167,9 @@
                     if (this.data[i].nightsnack) {
                         this.data[i].meal.push(d);
                     }
+                    
                     this.data[i].date = this.data[i].date.substr(0, 10);
+                    
                 }
                 console.log(this.data);
             }
