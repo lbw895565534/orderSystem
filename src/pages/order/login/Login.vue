@@ -21,7 +21,7 @@
         methods: {
             login() {
 
-                axios.get('http://172.16.28.112:3000/users/findUser', {
+                axios.get('http://192.168.2.220:3000/users/findUser', {
                     params: { username: this.username, password: this.password }
                 }).then(res => {
 
