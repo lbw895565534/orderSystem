@@ -139,11 +139,12 @@
                     params: { date: this.currentDate }
                 }).then(res => {
                     if (res.data.length) {
-                        console.log(1);
-                        
+                        res.data.forEach(n=> {
+                            this.lists.l.push(n.name);
+                        })
+                        console.log(res.data)
                         this.data.lunch = this.lists.l.length;
-                    }         
-                    console.log(this.lists.l);              
+                    }                                  
                 }).catch(err => {
                     console.log('请求失败:' + err.status + ',' + err.statusText);
                 });
@@ -335,5 +336,6 @@
         line-height: 30px;
         float: left;
         text-align: center;
+        font-size: 18px;
     }
 </style>

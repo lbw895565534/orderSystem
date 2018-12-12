@@ -1,7 +1,10 @@
 <template>
     <div id="container">
         <div class="box">
-            <input type="text" class="username" v-model="username">
+            <input type="test" class="username" v-model="section" @click="show1=true" readonly>
+            <van-actionsheet v-model="show1" :actions="actions1" cancel-text="取消" @select="onSelect1" @cancel="onCancel1" />
+            <input type="test" class="username" v-model="name" @click="show2=true" readonly>
+            <van-actionsheet v-model="show2" :actions="actions2" cancel-text="取消" @select="onSelect2" @cancel="onCancel2" />
             <input type="password" class="password" v-model="password">
             <button class="username" @click="login()">登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录</button>
         </div>
@@ -11,14 +14,59 @@
 <script>
     import axios from 'Axios';
     import { Dialog } from 'vant';
+    import { Actionsheet } from 'vant';
+    import { Toast } from 'vant';
+
     export default {
         data() {
             return {
+                section: '',
+                name: "",
                 username: "",
                 password: "",
+                show1: false,
+                show2: false,
+                actions1: [
+                    {
+                        name: '客运',
+                        list: []
+                    },
+                    {
+                        name: '运转',
+                        list: []
+                    },
+                    {
+                        name: '管理',
+                        list: []
+                    },
+                    {
+                        name: '饭堂',
+                        list: []
+                    },
+                ],
+                actions2: []
             }
         },
         methods: {
+            onSelect1(item) {
+                // 点击选项时默认不会关闭菜单，可以手动关闭
+                this.show1 = false;
+                this.section = item.name;
+                this.actions2 = item.list;
+                this.username = "", this.name = "";                
+            },
+            onCancel1() {
+                this.show1 = false;
+            },
+            onSelect2(item) {
+                // 点击选项时默认不会关闭菜单，可以手动关闭
+                this.show2 = false;
+                this.name = item.name;
+                this.username = item.username;
+            },
+            onCancel2() {
+                this.show2 = false;
+            },
             login() {
                 axios.get('http://119.23.189.182:80/users/findUser', {
                     params: { username: this.username, password: this.password }
@@ -48,7 +96,7 @@
                             }.bind(this), 1000)
                         }
                         if (!res.data[0].password) {
-                            this.$router.push({name: 'Setpassword'})
+                            this.$router.push({ name: 'Setpassword' })
                         }
 
                     }
@@ -60,6 +108,36 @@
                     console.log('请求失败:' + err.status + ',' + err.statusText);
                 });
             }
+        },
+        mounted() {
+            axios.get('http://119.23.189.182:80/users/getUsers').then(res => {
+                if (res.data.length) {
+                    console.log(res.data);
+                    res.data.forEach(n => {
+                        switch (n.section) {
+                            case 'ky':{
+                                this.actions1[0].list.push(n);
+                                console.log(n)
+                                break;
+                            }
+                            case 'yz':
+                                this.actions1[1].list.push(n)
+                                break;
+                            case 'gl':
+                                this.actions1[2].list.push(n)
+                                break;
+                            case 'ft':
+                                this.actions1[3].list.push(n)
+                                break;
+                            default:
+                                break;
+                        }
+                    });
+                }
+
+            }).catch(err => {
+                console.log('请求失败:' + err.status + ',' + err.statusText);
+            });
         }
     }
 </script>

@@ -4,7 +4,7 @@
             <div class="top">
                 <img src="@/assets/img/back.svg" alt="" class="left" @click="back()">
                 <span>{{ name }}</span>
-                <img src="@/assets/img/record.svg" alt="" class="right" @click="toRecord()">
+                <img src="@/assets/img/record.svg" alt="" class="right" @click="toRecord()" >
             </div>
             <div class="content">
                 <div class="item item1">
@@ -91,6 +91,38 @@
             creatDate() {
                 this.today = this.getDate(0, "-");
                 this.tommorrow = this.getDate(1, "-");
+                axios.get('http://119.23.189.182:80/users/findRecordByDateId', {
+                    params: { uid: this.id, date: this.today }
+                }).then(res => {
+                    console.log(res.data);
+                    if (res.data.length) {
+                        var order = res.data[0];
+                        order.breakfast == 1?this.date1[0].checked = true:this.date1[0].checked = false;
+                        order.lunch == 1?this.date1[1].checked = true:this.date1[1].checked = false;
+                        order.dinner == 1?this.date1[2].checked = true:this.date1[2].checked = false;
+                    }
+                    else {
+                       
+                    }
+                }).catch(err => {
+                    console.log('请求失败:' + err.status + ',' + err.statusText);
+                });
+                axios.get('http://119.23.189.182:80/users/findRecordByDateId', {
+                    params: { uid: this.id, date: this.tommorrow }
+                }).then(res => {
+                    console.log(res.data);
+                    if (res.data.length) {
+                        var order = res.data[0];
+                        order.breakfast == 1?this.date2[0].checked = true:this.date2[0].checked = false;
+                        order.lunch == 1?this.date2[1].checked = true:this.date[1].checked = false;
+                        order.dinner == 1?this.date2[2].checked = true:this.date2[2].checked = false;
+                    }
+                    else {
+                       
+                    }
+                }).catch(err => {
+                    console.log('请求失败:' + err.status + ',' + err.statusText);
+                });
             },
             turn() {
                 console.log(this.date1);
@@ -195,11 +227,7 @@
                 });
             }
         },
-        // 创建完成时
-        created() {
-            this.id = window.localStorage.getItem("id");
-            this.creatDate();
-        },
+        
         // 挂载完成时
         mounted() {
             this.id = window.localStorage.getItem("id");
@@ -250,6 +278,7 @@
         float: right;
         margin-right: 10px;
         margin-top: 14px;
+        visibility: hidden;
     }
 
     .content {
