@@ -1,11 +1,14 @@
 <template>
     <div id="container">
         <div class="box">
-            <input type="test" class="username" v-model="section" @click="show1=true" readonly>
+            <input type="test" class="sel username" v-model="section" @click="show1=true" readonly placeholder="请选择部门">
             <van-actionsheet v-model="show1" :actions="actions1" cancel-text="取消" @select="onSelect1" @cancel="onCancel1" />
-            <input type="test" class="username" v-model="name" @click="show2=true" readonly>
+            <input type="test" class="sel username" v-model="name" @click="show2=true" readonly placeholder="请选择姓名">
             <van-actionsheet v-model="show2" :actions="actions2" cancel-text="取消" @select="onSelect2" @cancel="onCancel2" />
-            <input type="password" class="password" v-model="password">
+            <input type="password" class="password" v-model="password" placeholder="请输入密码">
+            <van-dialog v-model="show" show-cancel-button :before-close="beforeClose">
+                <van-field v-model="set" type="text" label="密码" placeholder="请输入密码" />
+            </van-dialog>
             <button class="username" @click="login()">登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录</button>
         </div>
     </div>
@@ -16,7 +19,6 @@
     import { Dialog } from 'vant';
     import { Actionsheet } from 'vant';
     import { Toast } from 'vant';
-
     export default {
         data() {
             return {
@@ -24,6 +26,8 @@
                 name: "",
                 username: "",
                 password: "",
+                set: "",
+                show: false,
                 show1: false,
                 show2: false,
                 actions1: [
@@ -48,12 +52,30 @@
             }
         },
         methods: {
+            beforeClose(action, done) {
+                if (action === 'confirm') {
+                    if (this.set) {
+                        axios.get('http://119.23.189.182:80/users/setPassword', {
+                            params: { password: this.set, username: this.username }
+                        }).then(res => {
+                            if (res.status == 200) {
+                                this.show = false;
+                            }
+                        }).catch(err => {
+                            console.log('请求失败:' + err.status + ',' + err.statusText);
+                        });
+                    }
+                    
+                } else {
+                    done();
+                }
+            },
             onSelect1(item) {
                 // 点击选项时默认不会关闭菜单，可以手动关闭
                 this.show1 = false;
                 this.section = item.name;
                 this.actions2 = item.list;
-                this.username = "", this.name = "";                
+                this.username = "", this.name = "";
             },
             onCancel1() {
                 this.show1 = false;
@@ -73,8 +95,10 @@
                 }).then(res => {
                     if (res.data.length) {
                         // 如果密码为空，跳转至设置密码页面
-                        if (res.data[0].password) {
-                            console.info(res.data[0].username);
+                        if (res.data[0].password == "") {
+                                this.show = true;
+                            }
+                        if (res.data[0].password) {                            
                             if (window.localStorage) {
                                 window.localStorage.setItem("id", res.data[0].id);
                                 window.localStorage.setItem("name", res.data[0].name);
@@ -83,8 +107,6 @@
                                 window.localStorage.setItem("password", res.data[0].password);
                                 window.localStorage.setItem("job", res.data[0].job);
                                 console.info(window.localStorage.getItem('rule'))
-                            } else {
-                                console.log("localstorage不存在")
                             }
                             setTimeout(function () {
                                 if (localStorage.getItem('rule') == 1) {
@@ -94,10 +116,7 @@
                                     this.$router.push({ name: 'Order' });
                                 }
                             }.bind(this), 1000)
-                        }
-                        if (!res.data[0].password) {
-                            this.$router.push({ name: 'Setpassword' })
-                        }
+                        }                        
 
                     }
                     else {
@@ -115,7 +134,7 @@
                     console.log(res.data);
                     res.data.forEach(n => {
                         switch (n.section) {
-                            case 'ky':{
+                            case 'ky': {
                                 this.actions1[0].list.push(n);
                                 console.log(n)
                                 break;
@@ -150,6 +169,7 @@
         background: rgb(14, 214, 240);
         display: flex;
         justify-content: center;
+        /* background: url("../../../../static/img/bg.jpg") no-repeat center; */
     }
 
     .box {
@@ -170,6 +190,7 @@
         box-shadow: 0 0 15px 1px #ddd inset;
         text-align: center;
         font-size: 20px;
+        line-height: 50px;
     }
 
     button {
@@ -181,5 +202,8 @@
         border-radius: 24px;
         background: #fd737e;
         outline: none;
+        color: #fff;
+        font-weight: bold;
+        box-shadow: 0 0 8px 0 #999;
     }
 </style>
