@@ -1,0 +1,27 @@
+.mint-header-title {
+  font-size: 18px!important;
+}
+
+.mint-searchbar {
+  height: 45px;
+}
+.mint-searchbar-inner {
+  height: 36px;
+  padding: 1px 6px!important;
+}
+.mint-searchbar-core {
+  padding-left: 10px;
+  font-size: 14px;
+}
+.mint-searchbar-cancel {
+  color: #E9A144!important;
+}
+.nav {
+  font-size: 16px;
+}
+.mint-tab-container {
+  height: 100%;
+}
+.picker-center-highlight {
+  margin-top: 0!important;
+}

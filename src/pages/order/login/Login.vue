@@ -3,8 +3,10 @@
         <div class="box">
             <input type="test" class="sel username" v-model="section" @click="show1=true" readonly placeholder="请选择部门">
             <van-actionsheet v-model="show1" :actions="actions1" cancel-text="取消" @select="onSelect1" @cancel="onCancel1" />
-            <input type="test" class="sel username" v-model="name" @click="show2=true" readonly placeholder="请选择姓名">
+            <input type="test" class="sel username" v-model="term" @click="show2=true" readonly placeholder="请选择班组">
             <van-actionsheet v-model="show2" :actions="actions2" cancel-text="取消" @select="onSelect2" @cancel="onCancel2" />
+            <input type="test" class="sel username" v-model="name" @click="show3=true" readonly placeholder="请选择姓名">
+            <van-actionsheet v-model="show3" :actions="actions3" cancel-text="取消" @select="onSelect3" @cancel="onCancel3" />
             <input type="password" class="password" v-model="password" placeholder="请输入密码">
             <van-dialog v-model="show" show-cancel-button :before-close="beforeClose">
                 <van-field v-model="set" type="text" label="密码" placeholder="请输入密码" />
@@ -23,32 +25,68 @@
         data() {
             return {
                 section: '',
-                name: "",
+                term: '',
+                name: '',
+                query: '',
                 username: "",
                 password: "",
                 set: "",
                 show: false,
                 show1: false,
                 show2: false,
+                show3: false,
                 actions1: [
+                {
+                        name: '管理',
+                        query: 'gl',
+                    },
                     {
                         name: '客运',
-                        list: []
+                        query: 'ky',
                     },
                     {
                         name: '运转',
-                        list: []
+                        query: 'yz',
                     },
                     {
-                        name: '管理',
-                        list: []
+                        name: '后台',
+                        query: 'ht',
+
+                    },
+                    {
+                        name: '票房',
+                        query: 'pf',
+                    },
+                    {
+                        name: '综控',
+                        query: 'zk',
                     },
                     {
                         name: '饭堂',
+                        query: 'ft',
+                   }
+                ],
+                actions2: [
+                    {
+                        name: '甲',
                         list: []
                     },
+                    {
+                        name: '乙',
+                        list: []
+                    },
+                    {
+                        name: '丙',
+                        list: []
+                    },
+                    {
+                        name: '丁',
+                        list: []
+                    }
                 ],
-                actions2: []
+                actions3: [
+
+                ]
             }
         },
         methods: {
@@ -74,8 +112,11 @@
                 // 点击选项时默认不会关闭菜单，可以手动关闭
                 this.show1 = false;
                 this.section = item.name;
-                this.actions2 = item.list;
-                this.username = "", this.name = "";
+                this.query = item.query;
+                // 重置后面的选项
+                this.name = '';
+                this.term = '';
+                this.username = '';
             },
             onCancel1() {
                 this.show1 = false;
@@ -83,11 +124,34 @@
             onSelect2(item) {
                 // 点击选项时默认不会关闭菜单，可以手动关闭
                 this.show2 = false;
-                this.name = item.name;
-                this.username = item.username;
+                  this.term = item.name;
+                  // 重置后面的选项
+                this.name = '';
+                this.username = '';
+                  console.log(this.query, this.term);
+                axios.get('http://119.23.189.182:80/users/getUsersBySectionTerm', {
+                    params: { section: this.query, term: this.term }
+                }).then(res => {
+                    console.log(res.data)
+                    this.actions3 = res.data;
+                }).catch(err => {
+                    console.log('请求失败:' + err.status + ',' + err.statusText);
+                });
+                if (this.section&&this.term) {
+                    this.show3 = true;
+                }
             },
             onCancel2() {
                 this.show2 = false;
+            },
+            onSelect3(item) {
+                // 点击选项时默认不会关闭菜单，可以手动关闭
+                this.show3 = false;
+                this.name = item.name;
+                this.username = item.username;
+            },
+            onCancel3() {
+                this.show3 = false;
             },
             login() {
                 axios.get('http://119.23.189.182:80/users/findUser', {
@@ -127,36 +191,6 @@
                     console.log('请求失败:' + err.status + ',' + err.statusText);
                 });
             }
-        },
-        mounted() {
-            axios.get('http://119.23.189.182:80/users/getUsers').then(res => {
-                if (res.data.length) {
-                    console.log(res.data);
-                    res.data.forEach(n => {
-                        switch (n.section) {
-                            case 'ky': {
-                                this.actions1[0].list.push(n);
-                                console.log(n)
-                                break;
-                            }
-                            case 'yz':
-                                this.actions1[1].list.push(n)
-                                break;
-                            case 'gl':
-                                this.actions1[2].list.push(n)
-                                break;
-                            case 'ft':
-                                this.actions1[3].list.push(n)
-                                break;
-                            default:
-                                break;
-                        }
-                    });
-                }
-
-            }).catch(err => {
-                console.log('请求失败:' + err.status + ',' + err.statusText);
-            });
         }
     }
 </script>

@@ -139,7 +139,9 @@
                         this.$router.push({ name: 'Order' });
                     });
                 }
-                
+                if (!this.id) {
+                    this.$router.push({ name: 'OLogin' });
+                }
             },
             toRecord() {
                 this.$router.push({ name: 'ORecord' });
@@ -199,7 +201,7 @@
                             });
                         });
                     }
-                    else {
+                    if (res.data.length == 0) {
                         console.log("无记录！");
                         Dialog.confirm({
                             title: temp.date + '尚未订餐',

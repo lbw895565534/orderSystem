@@ -8,6 +8,14 @@ import 'element-ui/lib/theme-chalk/index.css';
 import locale from 'element-ui/lib/locale/lang/en'
 import Vant from 'vant';
 import 'vant/lib/index.css';
+import MintUI from 'mint-ui'
+import '@/assets/css/my-mint.css';
+import '@/assets/libs/font/iconfont.css';
+import 'mint-ui/lib/style.css'
+import $ from '@/assets/libs/jquery-3.3.1.min.js'
+import animate from 'animate.css'
+import '@/assets/css/my-element.css';
+import 'element-ui/lib/theme-chalk/index.css';
 
 Vue.use(Vant);
 Vue.use(ElementUI, { locale })
