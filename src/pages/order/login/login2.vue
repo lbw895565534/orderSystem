@@ -1,20 +1,15 @@
 <template>
-  <div class="box" @turn="changeStatus()">
+  <div class="box" >
     <img src="static/images/background/bg_login.jpg" alt="" class="bg">
-    <transition-group enter-active-class="zoomInLeft" leave-active-class="zoomOutRight">
+    
       <Login :key="1" :status="status" v-show="status=='login'" @turn="changeStatus"></Login>
-      <Regist :key="2" :status="status" v-show="status=='regist'" @turn="changeStatus"></Regist>
-    </transition-group>
-    <!-- <div class="box_change">
-      <div class="circle">
-        <img src="@/assets/img/icon/change.svg" alt="" class="change">
-      </div>
-    </div> -->
+      <!-- <Regist :key="2" :status="status" v-show="status=='regist'" @turn="changeStatus"></Regist> -->
+    
   </div>
 </template>
 <script>
 import Login from "@/components/login/login";
-import Regist from "@/components/login/regist";
+// import Regist from "@/components/login/regist";
 export default {
   data() {
     return {
@@ -23,13 +18,9 @@ export default {
   },
   components: {
     Login,
-    Regist
+    // Regist
   },
-  methods: {
-    changeStatus(val) {
-      this.status = val;
-    }
-  }
+
 };
 </script>
 <style scoped>

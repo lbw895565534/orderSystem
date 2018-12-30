@@ -35,9 +35,17 @@
   font-size: 20px;
 }
 .van-field input {
-  font-size: 20px;
+  font-size: 18px;
 }
-.van-button {
-  font-size: 20px;
+.van-button { 
+  font-size: 18px;
+}
+/* .van-cell {
+    line-height: 48px!important;
+} */
+.van-dialog__header {
+    padding-top: 20px!important;
+    padding-bottom: 20px!important;
+    font-size: 20px!important;
 }
 </style>

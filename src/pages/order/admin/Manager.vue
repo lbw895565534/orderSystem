@@ -1,40 +1,43 @@
 <template>
-    <div class="box" @turn="changeStatus()">
-      <img src="static/images/background/bg_login.jpg" alt="" class="bg">
-        <div class="box_login box_input1 ">
-            <div id="input1" class="input">
-              <span class="title">用户登录</span>
-            </div>
-            <div id="input2" class="input">
-              <div class="border" v-bind:class="{focus:form[0].focus}">
-                <div class="box_icon">
-                  <img src="@/assets/img/icon/username.svg" alt="" class="icon" v-if="!form[0].focus">
-                  <img src="@/assets/img/icon/username_after.svg" alt="" class="icon" v-if="form[0].focus">
-                </div>
-                <input type="text" class="input_username" placeholder="用户名" v-model="username" @focus="focus(0)" @blur="unFocus(0)">
-              </div>
-            </div>
-            <div id="input3" class="input">
-              <div class="border" v-bind:class="{focus:form[1].focus}">
-                <div class="box_icon">
-                  <img src="@/assets/img/icon/password.svg" alt="" class="icon" v-if="!form[1].focus">
-                  <img src="@/assets/img/icon/password_after.svg" alt="" class="icon" v-if="form[1].focus">
-                </div>
-                <input type="password" class="input_password" placeholder="密码" v-model="password" @focus="focus(1)" @blur="unFocus(1)">
-              </div>
-            </div>
-            <div id="input4" class="input">
-              <button class="login" @click="submit()">登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录</button>
-            </div>
-            <div id="input5" class="input">
-              <span class="jump" @click="toRegist()">还没有账号？</span>
-            </div>
+  <div class="box" @turn="changeStatus()">
+    <img src="static/images/background/bg_login.jpg" alt="" class="bg">
+    <div class="box_login box_input1 ">
+      <div id="input1" class="input">
+        <span class="title">用户登录</span>
+      </div>
+      <div id="input2" class="input">
+        <div class="border" v-bind:class="{focus:form[0].focus}">
+          <div class="box_icon">
+            <img src="@/assets/img/icon/username.svg" alt="" class="icon" v-if="!form[0].focus">
+            <img src="@/assets/img/icon/username_after.svg" alt="" class="icon" v-if="form[0].focus">
           </div>
+          <input type="text" class="input_username" placeholder="用户名" v-model="username" @focus="focus(0)" @blur="unFocus(0)">
+        </div>
+      </div>
+      <div id="input3" class="input">
+        <div class="border" v-bind:class="{focus:form[1].focus}">
+          <div class="box_icon">
+            <img src="@/assets/img/icon/password.svg" alt="" class="icon" v-if="!form[1].focus">
+            <img src="@/assets/img/icon/password_after.svg" alt="" class="icon" v-if="form[1].focus">
+          </div>
+          <input type="password" class="input_password" placeholder="密码" v-model="password" @focus="focus(1)" @blur="unFocus(1)">
+        </div>
+      </div>
+      <div id="input4" class="input">
+        <button class="login" @click="submit()">登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录</button>
+      </div>
+      <div id="input5" class="input">
+        <span class="jump" @click="findPassword()">找回密码</span>
+      </div>
     </div>
-  </template>
-  <script>
+  </div>
+</template>
+<script>
   import Login from "@/components/login/login";
   import Regist from "@/components/login/regist";
+  import axios from 'Axios';
+  import { Dialog } from 'vant';
+  import { Toast } from 'vant';
   export default {
     data() {
       return {
@@ -42,11 +45,11 @@
         username: "",
         password: "",
         form: [{
-            focus: false
-          },
-          {
-            focus: false
-          }
+          focus: false
+        },
+        {
+          focus: false
+        }
         ],
         success: true
       };
@@ -65,19 +68,35 @@
       unFocus(i) {
         this.form[i].focus = false;
       },
+      findPassword() {
+        axios.get('http://119.23.189.182:80/users/findPassword', {
+          params: { username: this.username }
+        }).then(res => {
+          
+          Dialog.alert({
+            title: this.username + '的密码',
+            message: res.data[0].password
+          }).then(() => {
+            // on close
+          });
+        }).catch(err => {
+          console.log('请求失败:' + err.status + ',' + err.statusText);
+        });
+      }
     }
   };
-  </script>
-  <style scoped>
+</script>
+<style scoped>
   .box {
     width: 100%;
     height: 100%;
   }
-  
+
   .bg {
     width: 100%;
     height: 100%;
   }
+
   input,
   textarea {
     -webkit-appearance: none;
@@ -198,5 +217,4 @@
   .login:active {
     box-shadow: -1px -1px 5px 0 #999 inset;
   }
-  </style>
-  
+</style>

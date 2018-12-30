@@ -31,9 +31,9 @@
 </template>
 <script>
   import axios from 'Axios';
-    import { Dialog } from 'vant';
-    import { Actionsheet } from 'vant';
-    import { Toast } from 'vant';
+  import { Dialog } from 'vant';
+  import { Actionsheet } from 'vant';
+  import { Toast } from 'vant';
   export default {
     props: ["status"],
     data() {
@@ -41,17 +41,17 @@
         username: "",
         password: "",
         form: [{
-            focus: false
-          },
-          {
-            focus: false
-          }
+          focus: false
+        },
+        {
+          focus: false
+        }
         ],
         success: true
       };
     },
     methods: {
-      
+
       focus(i) {
         this.form[i].focus = true;
       },
@@ -60,65 +60,42 @@
       },
       submit() {
         axios.get('http://119.23.189.182:80/users/findUser', {
-                    params: { username: this.username, password: this.password }
-                }).then(res => {
-                    if (res.data.length) {
-                        // 如果密码为空，跳转至设置密码页面
-                        if (res.data[0].password == "") {
-                                this.show = true;
-                            }
-                        if (res.data[0].password) {                            
-                            if (window.localStorage) {
-                                window.localStorage.setItem("id", res.data[0].id);
-                                window.localStorage.setItem("name", res.data[0].name);
-                                window.localStorage.setItem("rule", res.data[0].rule);
-                                window.localStorage.setItem("username", res.data[0].username);
-                                window.localStorage.setItem("password", res.data[0].password);
-                                window.localStorage.setItem("job", res.data[0].job);
-                                console.info(window.localStorage.getItem('rule'))
-                            }
-                            setTimeout(function () {
-                                if (localStorage.getItem('rule') == 1) {
-                                    this.$router.push({ name: 'OReport' });
-                                }
-                                if (localStorage.getItem('rule') == 2) {
-                                    this.$router.push({ name: 'Order' });
-                                }
-                            }.bind(this), 1000)
-                        }                        
+          params: { username: this.username, password: this.password }
+        }).then(res => {
+          if (res.data.length) {
+            // 如果密码为空，跳转至设置密码页面
+            if (res.data[0].password == "") {
+              this.show = true;
+            }
+            if (res.data[0].password) {
+              if (window.localStorage) {
+                window.localStorage.setItem("id", res.data[0].id);
+                window.localStorage.setItem("name", res.data[0].name);
+                window.localStorage.setItem("rule", res.data[0].rule);
+                window.localStorage.setItem("username", res.data[0].username);
+                window.localStorage.setItem("password", res.data[0].password);
+                window.localStorage.setItem("job", res.data[0].job);
+                console.info(window.localStorage.getItem('rule'))
+              }
+              setTimeout(function () {
+                if (localStorage.getItem('rule') == 1) {
+                  this.$router.push({ name: 'OReport' });
+                }
+                if (localStorage.getItem('rule') == 2) {
+                  this.$router.push({ name: 'Order' });
+                }
+              }.bind(this), 1000)
+            }
 
-                    }
-                    else {
-                        console.log(res.data);
-                        alert("账号或密码错误！")
-                    }
-                }).catch(err => {
-                    console.log('请求失败:' + err.status + ',' + err.statusText);
-                });
+          }
+          else {
+            console.log(res.data);
+            alert("账号或密码错误！")
+          }
+        }).catch(err => {
+          console.log('请求失败:' + err.status + ',' + err.statusText);
+        });
       },
-      loginSuccess() {
-        if (this.userstatus == 200) {
-          Toast({
-            message: '登录成功',
-            iconClass: 'icon icon-success'
-          })
-          setTimeout(() => {
-            this.$router.push({
-              name: "home"
-            });
-          }, 1000)
-        }
-      },
-      toRegist() {
-        this.$emit("turn", "regist");
-      }
-    },
-    watch: {
-      userstatus(val) {
-        if (val == 200) {
-          this.loginSuccess();
-        }
-      }
     }
   };
 
@@ -244,5 +221,4 @@
   .login:active {
     box-shadow: -1px -1px 5px 0 #999 inset;
   }
-
 </style>
