@@ -37,6 +37,21 @@
                 <div class="submit s2">
                     <button @click="submit(2)">提交</button>
                 </div>
+                <div class="item item1">
+                    <div class="date">
+                        <span>{{ bermorgen }}</span>
+                    </div>
+                    <div class="meal">
+                        <div v-for="(item,index) in date3" class="mealSel">
+                            <!-- <input class="i" type="checkbox" name="date2" id="" v-model="item.checked"> -->
+                            <el-checkbox v-model="item.checked" :label="item.value" border fill="#fd737e" :disabled="item.disabled"></el-checkbox>
+                            <!-- <span>{{ item.value }}</span> -->
+                        </div>
+                    </div>
+                </div>
+                <div class="submit s3">
+                    <button @click="submit(3)">提交</button>
+                </div>
             </div>
         </div>
     </div>
@@ -52,6 +67,7 @@
             return {
                 today: "",
                 tommorrow: "",
+                bermorgen: "",
                 date1: [
                     { value: '早餐', checked: false, disabled: false },
                     { value: '午餐', checked: false, disabled: false },
@@ -59,6 +75,12 @@
 
                 ],
                 date2: [
+                    { value: '早餐', checked: false, disabled: false },
+                    { value: '午餐', checked: false, disabled: false },
+                    { value: '晚餐', checked: false, disabled: false },
+
+                ],
+                date3: [
                     { value: '早餐', checked: false, disabled: false },
                     { value: '午餐', checked: false, disabled: false },
                     { value: '晚餐', checked: false, disabled: false },
@@ -91,6 +113,7 @@
             creatDate() {
                 this.today = this.getDate(0, "-");
                 this.tommorrow = this.getDate(1, "-");
+                this.bermorgen = this.getDate(2, "-");
                 axios.get('http://119.23.189.182:80/users/findRecordByDateId', {
                     params: { uid: this.id, date: this.today }
                 }).then(res => {
@@ -116,6 +139,22 @@
                         order.breakfast == 1?this.date2[0].checked = true:this.date2[0].checked = false;
                         order.lunch == 1?this.date2[1].checked = true:this.date[1].checked = false;
                         order.dinner == 1?this.date2[2].checked = true:this.date2[2].checked = false;
+                    }
+                    else {
+                       
+                    }
+                }).catch(err => {
+                    console.log('请求失败:' + err.status + ',' + err.statusText);
+                });
+                axios.get('http://119.23.189.182:80/users/findRecordByDateId', {
+                    params: { uid: this.id, date: this.bermorgen }
+                }).then(res => {
+                    console.log(res.data);
+                    if (res.data.length) {
+                        var order = res.data[0];
+                        order.breakfast == 1?this.date3[0].checked = true:this.date3[0].checked = false;
+                        order.lunch == 1?this.date3[1].checked = true:this.date3[1].checked = false;
+                        order.dinner == 1?this.date3[2].checked = true:this.date3[2].checked = false;
                     }
                     else {
                        
@@ -162,12 +201,18 @@
                     this.date2[2].checked == 1 ? temp.dinner = 1 : temp.dinner = 0;
                     // this.date2[3].checked == 1 ? temp.nightsnack = 1 : temp.nightsnack = 0;
                 }
-
+                if (flag == 3) {
+                    temp.date = this.bermorgen;
+                    this.date3[0].checked == 1 ? temp.breakfast = 1 : temp.breakfast = 0;
+                    this.date3[1].checked == 1 ? temp.lunch = 1 : temp.lunch = 0;
+                    this.date3[2].checked == 1 ? temp.dinner = 1 : temp.dinner = 0;
+                    // this.date2[3].checked == 1 ? temp.nightsnack = 1 : temp.nightsnack = 0;
+                }
                 axios.get('http://119.23.189.182:80/users/findRecordByDateId', {
                     params: { uid: temp.uid, date: temp.date }
                 }).then(res => {
                     console.log(res.data);
-                    if (res.data.length) {
+                    if (res.data.length == 1) {
                         console.log("已存在");
                         Dialog.confirm({
                             title: temp.date + '已经存在订餐',
@@ -224,6 +269,10 @@
                             // on cancel
                         });
                     }
+                    if (res.data.length >= 2) {
+                        Toast('系统错误，请联系管理员')
+                    }
+                    
                 }).catch(err => {
                     console.log('请求失败:' + err.status + ',' + err.statusText);
                 });

@@ -75,7 +75,7 @@
                 data: { breakfast: 0, lunch: 0, dinner: 0 },
                 show: false,
                 dateTemp: "",
-                minDate: new Date(2018, 11, 1),
+                minDate: new Date(2019, 0, 1),
                 currentDate: this.getNowFormatDate(),
                 active: 0,
                 lists: {b: [], l: [], d: []}

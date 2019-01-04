@@ -19,7 +19,7 @@
 <script>
   import axios from 'Axios';
   import {
-    Dialog,Toast,Actionsheet
+    Dialog, Toast, Actionsheet
   } from 'vant';
   export default {
     data() {
@@ -36,34 +36,34 @@
         show2: false,
         show3: false,
         actions1: [{
-            name: '管理',
-            query: 'gl',
-          },
-          {
-            name: '客运',
-            query: 'ky',
-          },
-          {
-            name: '运转',
-            query: 'yz',
-          },
-          {
-            name: '后台',
-            query: 'ht',
+          name: '管理',
+          query: 'gl',
+        },
+        {
+          name: '其他',
+          query: 'ht',
 
-          },
-          {
-            name: '票房',
-            query: 'pf',
-          },
-          {
-            name: '综控',
-            query: 'zk',
-          },
-          {
-            name: '饭堂',
-            query: 'ft',
-          }
+        },
+        {
+          name: '客运',
+          query: 'ky',
+        },
+        {
+          name: '运转',
+          query: 'yz',
+        },
+        {
+          name: '票房',
+          query: 'pf',
+        },
+        {
+          name: '饭堂',
+          query: 'ft',
+        },
+        {
+          name: '实习生',
+          query: 'sxs',
+        },
         ],
         actions2: [
 
@@ -76,33 +76,34 @@
     methods: {
       beforeClose(action, done) {
         if (action === 'confirm') {
-          setTimeout(function () {
-            if (this.set) {
-              axios.get('http://119.23.189.182:80/users/setPassword', {
-                params: {
-                  password: this.set,
-                  username: this.username
-                }
-              }).then(res => {
-                if (res.status == 200) {
-                  this.show = false;
-                }
-              }).catch(err => {
-                console.log('请求失败:' + err.status + ',' + err.statusText);
-              })
-            } else {
-                Toast('不能为空')
-                done()
-            }
-          }, 1000);
-        } else {
+
+          if (this.set) {
+            axios.get('http://119.23.189.182:80/users/setPassword', {
+              params: {
+                password: this.set,
+                username: this.username
+              }
+            }).then(res => {
+              if (res.status == 200) {
+                this.show = false;
+              }
+            }).catch(err => {
+              console.log('请求失败:' + err.status + ',' + err.statusText);
+            })
+          }
+          if (this.set == "") {
+            Toast('不能为空')
+            done()
+          }
+        }
+        else {
           done();
         }
       },
       onSelect1(item) {
         // 点击选项时默认不会关闭菜单，可以手动关闭
         this.show1 = false;
-        this.show2 = true;
+
         this.section = item.name;
         this.query = item.query;
         // 重置后面的选项
@@ -112,16 +113,24 @@
 
         axios.get('http://119.23.189.182:80/users/getTermBySection', {
           params: {
-            section: this.query,            
+            section: this.query,
           }
         }).then(res => {
           this.actions2 = res.data;
           this.actions2.forEach(n => {
             n.name = n.term;
           });
+          if (this.actions2.length == 1) {
+            var temp = { name: '甲' };
+            this.onSelect2(temp)
+          }
+          if (this.actions2.length >= 2) {
+            this.show2 = true;
+          }
         }).catch(err => {
           console.log('请求失败:' + err.status + ',' + err.statusText);
         });
+
 
       },
       onCancel1() {
@@ -257,6 +266,7 @@
     font-weight: bold;
     box-shadow: 0 0 8px 0 #999;
   }
+
   /* .van-cell {
     line-height: 48px!important;
 } */

@@ -3,6 +3,8 @@ import Router from 'vue-router'
 import Home from '@/pages/main/Home'
 import OReport from '@/pages/order/admin/Report'
 import OManager from '@/pages/order/admin/Manager'
+import OAdd from '@/pages/order/admin/Add'
+import ORemove from '@/pages/order/admin/Remove'
 import OLogin from '@/pages/order/login/Login'
 import OLogin2 from '@/pages/order/login/Login2'
 import OSetpassword from '@/pages/order/login/Setpassword'
@@ -37,6 +39,16 @@ export default new Router({
       path: '/manager',
       name: 'OManager',
       component: OManager,
+    },
+    {
+      path: '/add',
+      name: 'OAdd',
+      component: OAdd,
+    },
+    {
+      path: '/remove',
+      name: 'ORemove',
+      component: ORemove,
     },
     {
       path: '/setpassword',
