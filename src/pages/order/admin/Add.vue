@@ -156,7 +156,12 @@
             password: this.password
           }
         }).then(res => {
-            console.log("成功！")
+            if(res.data.status == 200) {
+                Toast('添加成功');
+            }
+            else {
+                Toast('添加失败');
+            }
         }).catch(err => {
             console.log(params)
           console.log('请求失败:' + err.status + ',' + err.statusText);

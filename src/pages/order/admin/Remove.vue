@@ -61,7 +61,12 @@
             name:this.name,             
           }
         }).then(res => {
-            Toast("删除成功");
+            if(res.data.status == 200) {
+                Toast('删除成功');
+            }
+            else {
+                Toast('删除失败');
+            }
         }).catch(err => {
             console.log(params)
           console.log('请求失败:' + err.status + ',' + err.statusText);
