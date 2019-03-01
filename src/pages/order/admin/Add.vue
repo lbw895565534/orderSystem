@@ -1,6 +1,6 @@
 <template>
     <div class="box" @turn="changeStatus()">
-        <img src="static/images/background/bg_login.jpg" alt="" class="bg">
+        <img src="@/assets/img/bg_login.jpg" alt="" class="bg">
         <div class="box_login box_input1 ">
             <div id="input1" class="input">
                 <span class="title">用户添加</span>
@@ -61,8 +61,6 @@
     </div>
 </template>
 <script>
-    import Login from "@/components/login/login";
-    import Regist from "@/components/login/regist";
     import axios from 'Axios';
     import { Dialog } from 'vant';
     import { Toast } from 'vant';
@@ -110,9 +108,6 @@
                 success: true
             };
         },
-        components: {
-            Login
-        },
         methods: {
             changeStatus(val) {
                 this.status = val;
@@ -156,12 +151,10 @@
             password: this.password
           }
         }).then(res => {
-            if(res.data.status == 200) {
+            console.log(res.data)
+
                 Toast('添加成功');
-            }
-            else {
-                Toast('添加失败');
-            }
+       
         }).catch(err => {
             console.log(params)
           console.log('请求失败:' + err.status + ',' + err.statusText);

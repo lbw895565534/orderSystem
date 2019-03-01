@@ -48,4 +48,8 @@
     padding-bottom: 20px!important;
     font-size: 20px!important;
 }
+.van-dialog__content {
+    height: auto!important;
+    font-size: 20px;
+}
 </style>

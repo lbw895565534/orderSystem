@@ -16,7 +16,10 @@ import $ from '@/assets/libs/jquery-3.3.1.min.js'
 import animate from 'animate.css'
 import '@/assets/css/my-element.css';
 import 'element-ui/lib/theme-chalk/index.css';
+import preview from 'vue-photo-preview'
+import 'vue-photo-preview/dist/skin.css'
 
+Vue.use(preview)
 Vue.use(Vant);
 Vue.use(ElementUI, { locale })
 

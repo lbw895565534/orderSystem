@@ -65,7 +65,7 @@
                 key: { uid: window.localStorage.getItem("id"), date: "" },
                 show: false,
                 dateTemp: "",
-                minDate: new Date(2018, 11, 1),
+                minDate: new Date(2019, 0, 1),
                 currentDate: "",
                 id: window.localStorage.getItem("id"),
                 name: window.localStorage.getItem("name"),
@@ -75,7 +75,7 @@
             dateTemp(val) {
                 var seperator1 = "-";
                 var year = val.getFullYear();
-                var month = val.getMonth() + 1;
+                var month = val.getMonth();
                 var strDate = val.getDate() ;
                 if (month >= 1 && month <= 9) {
                     month = "0" + month;
@@ -122,6 +122,10 @@
                 }).then(res => {
                     if (res.data.length) {
                         this.data = res.data;
+                        
+                        res.data.forEach(n => {                            
+                            n.date = new Date(new Date(n.date.substring(0,10)).setDate(new Date(n.date.substring(0,10)).getDate()+1));                                                     
+                        })
                         this.dealData();
                     }
                     else {
@@ -140,7 +144,7 @@
                 }).then(res => {
                     console.log(res)
                     if (res.data.length) {
-                        this.data = res.data;
+                        this.data = res.data;                                 
                         this.dealData()
                     }
                     else {
@@ -168,7 +172,10 @@
                         this.data[i].meal.push(d);
                     }
                     
-                    this.data[i].date = this.data[i].date.substr(0, 10);
+                    // 日期加一
+                    console.log( typeof(this.data[i].date) );
+
+                    this.data[i].date = this.data[i].date.getFullYear() + "-" + (this.data[i].date.getMonth() + 1) + "-" + this.data[i].date.getDate() ;
                     
                 }
                 console.log(this.data);

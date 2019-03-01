@@ -1,25 +1,37 @@
 <template>
-  <div id="container">
-    <div class="box">
-      <input type="test" class="sel username" v-model="section" @click="show1=true" readonly placeholder="请选择部门">
-      <van-actionsheet v-model="show1" :actions="actions1" cancel-text="取消" @select="onSelect1" @cancel="onCancel1" />
-      <input type="test" class="sel username" v-model="term" @click="show2=true" readonly placeholder="请选择班组">
-      <van-actionsheet v-model="show2" :actions="actions2" cancel-text="取消" @select="onSelect2" @cancel="onCancel2" />
-      <input type="test" class="sel username" v-model="name" @click="show3=true" readonly placeholder="请选择姓名">
-      <van-actionsheet v-model="show3" :actions="actions3" cancel-text="取消" @select="onSelect3" @cancel="onCancel3" />
-      <input type="password" class="password" v-model="password" placeholder="请输入密码">
-      <van-dialog v-model="show" show-cancel-button :before-close="beforeClose" title="还没有密码">
-        <van-field v-model="set" type="text" label="密码" placeholder="请输入新密码" />
-      </van-dialog>
-      <button class="username" @click="login()">登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录</button>
+  <transition enter-active-class="animated bounceInDown">
+    <div id="container">
+        <img src="@/assets/img/bg_login.jpg" alt="" class="bg">
+      <!-- <div class="title" style="">
+        <span style="width:100%;height:auto;text-align:center;" >茂名站订餐系统</span>
+      </div> -->
+      <div class="box">
+        <input type="test" class="sel username" v-model="section" @click="show1=true" readonly placeholder="请选择部门">
+        <van-actionsheet v-model="show1" :actions="actions1" cancel-text="取消" @select="onSelect1" @cancel="onCancel1" />
+        <input type="test" class="sel username" v-model="term" @click="show2=true" readonly placeholder="请选择班组">
+        <van-actionsheet v-model="show2" :actions="actions2" cancel-text="取消" @select="onSelect2" @cancel="onCancel2" />
+        <input type="test" class="sel username" v-model="name" @click="show3=true" readonly placeholder="请选择姓名">
+        <van-actionsheet v-model="show3" :actions="actions3" cancel-text="取消" @select="onSelect3" @cancel="onCancel3" />
+        <input type="password" class="password" v-model="password" placeholder="请输入密码">
+        <van-dialog v-model="show" show-cancel-button :before-close="beforeClose" title="还没有密码">
+          <van-field v-model="set" type="text" label="密码" placeholder="请输入新密码" />
+        </van-dialog>
+
+        <button class="username" @click="login()">登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录</button>
+        <button class="username" @click="imgScc()">每周菜单</button>
+
+      </div>
     </div>
-  </div>
+  </transition>
 </template>
 
 <script>
   import axios from 'Axios';
   import {
-    Dialog, Toast, Actionsheet
+    Dialog,
+    Toast,
+    Actionsheet,
+    ImagePreview
   } from 'vant';
   export default {
     data() {
@@ -35,6 +47,7 @@
         show1: false,
         show2: false,
         show3: false,
+        ImagePreview: ["./static/img/list.jpg"],
         actions1: [{
           name: '管理',
           query: 'gl',
@@ -64,6 +77,10 @@
           name: '实习生',
           query: 'sxs',
         },
+        {
+          name: '助勤',
+          query: 'zq',
+        },
         ],
         actions2: [
 
@@ -76,7 +93,6 @@
     methods: {
       beforeClose(action, done) {
         if (action === 'confirm') {
-
           if (this.set) {
             axios.get('http://119.23.189.182:80/users/setPassword', {
               params: {
@@ -95,15 +111,16 @@
             Toast('不能为空')
             done()
           }
-        }
-        else {
+        } else {
           done();
         }
+      },
+      imgScc() {
+        ImagePreview(this.ImagePreview)
       },
       onSelect1(item) {
         // 点击选项时默认不会关闭菜单，可以手动关闭
         this.show1 = false;
-
         this.section = item.name;
         this.query = item.query;
         // 重置后面的选项
@@ -121,7 +138,9 @@
             n.name = n.term;
           });
           if (this.actions2.length == 1) {
-            var temp = { name: '甲' };
+            var temp = {
+              name: '甲'
+            };
             this.onSelect2(temp)
           }
           if (this.actions2.length >= 2) {
@@ -130,8 +149,6 @@
         }).catch(err => {
           console.log('请求失败:' + err.status + ',' + err.statusText);
         });
-
-
       },
       onCancel1() {
         this.show1 = false;
@@ -222,29 +239,60 @@
 </script>
 
 <style scoped>
+  .bg {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+  }
+
   #container {
     width: 100%;
     height: 100%;
-    position: relative;
-    background: rgb(14, 214, 240);
-    display: flex;
-    justify-content: center;
+    position: absolute;
+    /* background: rgb(14, 214, 240); */
+
     /* background: url("../../../../static/img/bg.jpg") no-repeat center; */
   }
 
+  .title {
+    width: 100%;
+    flex: 2;
+    font-size: 36px;
+    top: 20px;
+    color: #fff;
+    font-family: cursive;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
   .box {
-    width: 75%;
+    flex: 8;
+    width: 70%;
+    height: 75%;
+    padding: 5%;
+    background: #ffffffad;
     margin: auto;
     display: flex;
+    justify-content: center;
+    align-items: center;
     flex-direction: column;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    border-radius: 5px;
   }
 
   input {
     outline: none;
+    width: 90%;
     height: 48px;
     margin-bottom: 20px;
     border-radius: 24px;
-    border: 1px solid #ddd;
+    border: 0px solid #ddd;
     -webkit-appearance: none;
     /* 方法2 */
     box-shadow: 0 0 15px 1px #ddd inset;
@@ -254,7 +302,7 @@
   }
 
   button {
-    width: 100%;
+    width: 90%;
     height: 48px;
     font-size: 20px;
     border: none;
@@ -263,7 +311,7 @@
     background: #fd737e;
     outline: none;
     color: #fff;
-    font-weight: bold;
+    /* font-weight: bold; */
     box-shadow: 0 0 8px 0 #999;
   }
 

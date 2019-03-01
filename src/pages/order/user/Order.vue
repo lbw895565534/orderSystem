@@ -4,8 +4,19 @@
       <div class="top">
         <img src="@/assets/img/back.svg" alt="" class="left" @click="back()">
         <span>{{ name }}</span>
-        <img src="@/assets/img/record.svg" alt="" class="right" @click="toRecord()">
+        <img src="@/assets/img/record.svg" visibility="" alt="" class="right" @click="toRecord()">
       </div>
+
+      <!-- 订餐时间通知 -->
+      <van-notice-bar :text="notice1" left-icon="volume-o" @click="showNotice(1)" />
+
+      <!-- 临时通知 -->
+      <van-notice-bar :text="notice2" left-icon="volume-o" @click="showNotice(2)" />
+
+      <!-- 餐单 -->
+      <!-- <van-popup v-model="noticeshow1" style="width:250px;height:280px;display:flex;align-items: center;justify-content: center;">{{ notice1 }}</van-popup> -->
+      <van-notice-bar :text="notice3" left-icon="volume-o" @click="imgScc()" />
+
       <div class="content">
         <div class="item item1">
           <div class="date">
@@ -61,17 +72,24 @@
 <script>
   import axios from 'Axios';
   import {
-    Dialog
-  } from 'vant';
-  import {
-    Toast
+    Dialog,
+    Popup,
+    Toast,
+    ImagePreview
   } from 'vant';
   export default {
     data() {
       return {
+        notice1: "",
+        notice2: "",
+        notice3: "点击显示菜单",
+        popup: "",
+        ImagePreview: ["./static/img/list.jpg", "./static/img/list2.jpg"],
+        noticeshow1: false,
         today: "",
         tommorrow: "",
         bermorgen: "",
+        news: "初一初二不提供早餐夜宵",
         date1: [{
             value: '早餐',
             checked: false,
@@ -84,6 +102,11 @@
           },
           {
             value: '晚餐',
+            checked: false,
+            disabled: false
+          },
+          {
+            value: '夜宵',
             checked: false,
             disabled: false
           },
@@ -104,6 +127,11 @@
             checked: false,
             disabled: false
           },
+          {
+            value: '夜宵',
+            checked: false,
+            disabled: false
+          },
 
         ],
         date3: [{
@@ -121,6 +149,11 @@
             checked: false,
             disabled: false
           },
+          {
+            value: '夜宵',
+            checked: false,
+            disabled: false
+          },
 
         ],
         id: window.localStorage.getItem("id"),
@@ -131,13 +164,18 @@
       getDate(num, str) {
         var today = new Date();
         var nowTime = today.getTime();
+        //时间转化为小数
         var nowHour = today.getHours();
-        console.log(nowHour);
+        var nowMinutes = today.getMinutes();
+        var time = nowHour + nowMinutes / 60;
+        var bTime = 7 + 10 / 60;
+        console.log(time);
 
         // 根据时间关闭餐次
-        nowHour > 3 ? this.date1[0].disabled = true : this.date1[0].disabled = false;
-        nowHour > 8 ? this.date1[1].disabled = true : this.date1[1].disabled = false;
-        nowHour > 14 ? this.date1[2].disabled = true : this.date1[2].disabled = false;
+        time > bTime ? this.date1[0].disabled = true : this.date1[0].disabled = false;
+        time > 8.30 ? this.date1[1].disabled = true : this.date1[1].disabled = false;
+        time > 8.30 ? this.date1[2].disabled = true : this.date1[2].disabled = false;
+        time > 15.00 ? this.date1[3].disabled = true : this.date1[3].disabled = false;
         var ms = 24 * 3600 * 1000 * num;
         today.setTime(parseInt(nowTime + ms));
         var oYear = today.getFullYear();
@@ -163,6 +201,7 @@
             order.breakfast == 1 ? this.date1[0].checked = true : this.date1[0].checked = false;
             order.lunch == 1 ? this.date1[1].checked = true : this.date1[1].checked = false;
             order.dinner == 1 ? this.date1[2].checked = true : this.date1[2].checked = false;
+            order.nightsnack == 1 ? this.date1[3].checked = true : this.date1[3].checked = false;
           } else {
 
           }
@@ -181,6 +220,7 @@
             order.breakfast == 1 ? this.date2[0].checked = true : this.date2[0].checked = false;
             order.lunch == 1 ? this.date2[1].checked = true : this.date[1].checked = false;
             order.dinner == 1 ? this.date2[2].checked = true : this.date2[2].checked = false;
+            order.nightsnack == 1 ? this.date1[3].checked = true : this.date1[3].checked = false;
           } else {
 
           }
@@ -199,12 +239,29 @@
             order.breakfast == 1 ? this.date3[0].checked = true : this.date3[0].checked = false;
             order.lunch == 1 ? this.date3[1].checked = true : this.date3[1].checked = false;
             order.dinner == 1 ? this.date3[2].checked = true : this.date3[2].checked = false;
+            order.nightsnack == 1 ? this.date1[3].checked = true : this.date1[3].checked = false;
           } else {
 
           }
         }).catch(err => {
           console.log('请求失败:' + err.status + ',' + err.statusText);
         });
+      },
+      showNotice(flag) {
+        switch (flag) {
+          case 1:
+            this.noticeshow1 = true;
+            break;
+          case 2:
+            this.noticeshow2 = true;
+            break;
+
+          default:
+            break;
+        }
+      },
+      imgScc() {
+        ImagePreview(this.ImagePreview)
       },
       turn() {
         console.log(this.date1);
@@ -250,21 +307,21 @@
           this.date1[0].checked == 1 ? temp.breakfast = 1 : temp.breakfast = 0;
           this.date1[1].checked == 1 ? temp.lunch = 1 : temp.lunch = 0;
           this.date1[2].checked == 1 ? temp.dinner = 1 : temp.dinner = 0;
-          // this.date1[3].checked == 1 ? temp.nightsnack = 1 : temp.nightsnack = 0;
+          this.date1[3].checked == 1 ? temp.nightsnack = 1 : temp.nightsnack = 0;
         }
         if (flag == 2) {
           temp.date = this.tommorrow;
           this.date2[0].checked == 1 ? temp.breakfast = 1 : temp.breakfast = 0;
           this.date2[1].checked == 1 ? temp.lunch = 1 : temp.lunch = 0;
           this.date2[2].checked == 1 ? temp.dinner = 1 : temp.dinner = 0;
-          // this.date2[3].checked == 1 ? temp.nightsnack = 1 : temp.nightsnack = 0;
+          this.date2[3].checked == 1 ? temp.nightsnack = 1 : temp.nightsnack = 0;
         }
         if (flag == 3) {
           temp.date = this.bermorgen;
           this.date3[0].checked == 1 ? temp.breakfast = 1 : temp.breakfast = 0;
           this.date3[1].checked == 1 ? temp.lunch = 1 : temp.lunch = 0;
           this.date3[2].checked == 1 ? temp.dinner = 1 : temp.dinner = 0;
-          // this.date2[3].checked == 1 ? temp.nightsnack = 1 : temp.nightsnack = 0;
+          this.date2[3].checked == 1 ? temp.nightsnack = 1 : temp.nightsnack = 0;
         }
         axios.get('http://119.23.189.182:80/users/findRecordByDateId', {
           params: {
@@ -301,15 +358,13 @@
             });
           }
           if (res.data.length >= 2) {
-            Toast('系统错误，请联系管理员')
+            Toast('系统错误，请联系管理员');
           }
 
         }).catch(err => {
           console.log('请求失败:' + err.status + ',' + err.statusText);
         });
       },
-
-
       alter(t) {
         axios.get('http://119.23.189.182:80/users/alterMeal', {
           params: t
@@ -347,10 +402,69 @@
       }
     },
 
+    del(t) {
+      axios.get('http://119.23.189.182:80/users/insertMeal', {
+        params: t
+      }).then(res => {
+
+      }).catch(err => {
+        console.log('请求失败:' + err.status + ',' + err.statusText);
+      });
+    },
+
+
+
     // 挂载完成时
     mounted() {
       this.id = window.localStorage.getItem("id");
       this.creatDate();
+      setInterval(() => {
+        location.reload();
+      }, 300000);
+
+
+      // Dialog.alert({
+      //   title: '2.25开始订夜宵！',
+      //   message: "从下星期一（2月25日）起，需要吃夜宵的同志请在上晚班当天的中午15:00前在车站订餐平台报餐。不报餐的同志不再提供夜宵，也不收夜宵费用。另外，吃夜宵的同志需自行准备双层保温饭盒一个。当天晚班点名前将饭盒送到饭堂。"
+      // }).then(() => {
+      //   // on close
+      // });
+
+
+      axios.get('http://119.23.189.182:80/messages/getNotice', {
+        params: {
+          id: 1
+        }
+      }).then(res => {
+        console.log(res.data[0].news)
+        this.notice1 = res.data[0].news;
+      }).catch(err => {
+        console.log('请求失败:' + err.status + ',' + err.statusText);
+      });
+
+      axios.get('http://119.23.189.182:80/messages/getNotice', {
+        params: {
+          id: 2
+        }
+      }).then(res => {
+        console.log(res.data[0].news)
+        this.notice2 = res.data[0].news;
+      }).catch(err => {
+        console.log('请求失败:' + err.status + ',' + err.statusText);
+      });
+
+      // axios.get('http://119.23.189.182:80/messages/getNotice', {
+      //   params: {
+      //     id: 3
+      //   }
+      // }).then(res => {
+      //   if (res.data[0].news) {
+      //     alert(res.data[0].news)
+      //   }
+      // }).catch(err => {
+      //   console.log('请求失败:' + err.status + ',' + err.statusText);
+      // });
+
     },
   }
 
@@ -398,7 +512,6 @@
     float: right;
     margin-right: 10px;
     margin-top: 14px;
-    visibility: hidden;
   }
 
   .content {
@@ -409,6 +522,10 @@
     align-items: center;
     margin-top: 20px;
     z-index: 2;
+    position: absolute;
+    top: 150px;
+    bottom: 0;
+    overflow: scroll;
   }
 
   .item {
@@ -416,7 +533,6 @@
     height: 180px;
     border-radius: 15px;
     background: #fff;
-    overflow: hidden;
     margin-bottom: 10px;
     box-shadow: 0 0 10px 0px #ff9800;
     /* box-shadow: 0 1px 10px 0 #999; */
@@ -424,12 +540,14 @@
 
   .date {
     height: 48px;
+    width: 100%;
     background: #ff9800;
     display: flex;
     justify-content: center;
     align-items: center;
     color: #fff;
     font-size: 24px;
+    border-radius: 15px 15px 0 0;
   }
 
   .meal {
@@ -455,9 +573,10 @@
     font-size: 20px;
     border: none;
     margin-bottom: 20px;
-    display: flex;
+    /* display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: center; */
+    text-align: center;
   }
 
   button {
@@ -473,10 +592,20 @@
     box-shadow: 0 1px 10px 0 #999;
   }
 
-
+  .van-notice-bar {
+    width: 100%;
+    padding: 0 !important;
+  }
 
   .van-dialog__message--has-title {
     text-align: center !important;
   }
 
+  .list {
+    width: 100%;
+    height: 100%;
+    /*图片原始大小1倍*/
+    transition: all ease 0.5s;
+  }
+ 
 </style>

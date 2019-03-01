@@ -31,6 +31,10 @@
                             <span class="mark">{{ data.dinner }}</span>
                             <span class="info">晚餐</span>
                         </div>
+                        <div class="item">
+                            <span class="mark">{{ data.nightsnack }}</span>
+                            <span class="info">夜宵</span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -40,19 +44,25 @@
                     <div class="title">
                         <span>早餐</span>                        
                     </div>
-                    <span class="i" v-for="(n,index) in lists.b">{{ n }}</span>
+                    <span class="i" v-for="(n,index) in lists.b" :class="{red: n.section=='pf', blue: n.section==''}" >{{ n.name }}</span>
                 </div>
                 <div class="list list-l">
                     <div class="title">
                         <span>午餐</span>
                     </div>
-                    <span class="i" v-for="(n,index) in lists.l">{{ n }}</span>
+                    <span class="i" v-for="(n,index) in lists.l" :class="{red: n.section=='pf'}">{{ n.name }}</span>
                 </div>
                 <div class="list list-d">
                     <div class="title">
                         <span>晚餐</span>
                     </div>
-                    <span class="i" v-for="(n,index) in lists.d">{{ n }}</span>
+                    <span class="i" v-for="(n,index) in lists.d" :class="{red: n.section=='pf'}">{{ n.name }}</span>
+                </div>
+                <div class="list list-n">
+                    <div class="title">
+                        <span>夜宵</span>
+                    </div>
+                    <span class="i" v-for="(n,index) in lists.n" :class="{red: n.section=='pf'}">{{ n.name }}</span>
                 </div>
             </div>
         </div>
@@ -72,13 +82,13 @@
                 today: "",
                 tommorrow: "",
                 result: [],
-                data: { breakfast: 0, lunch: 0, dinner: 0 },
+                data: { breakfast: 0, lunch: 0, dinner: 0, nightsnack: 0 },
                 show: false,
                 dateTemp: "",
                 minDate: new Date(2019, 0, 1),
                 currentDate: this.getNowFormatDate(),
                 active: 0,
-                lists: {b: [], l: [], d: []}
+                lists: {b: [], l: [], d: [], n: []}
             }
         },
         watch: {
@@ -125,10 +135,10 @@
                 this.data.dinner = 0;
                 axios.get('http://119.23.189.182:80/users/findBreakfastByDate', {
                     params: { date: this.currentDate }
-                }).then(res => {
+                }).then(res => {                    
                     if (res.data.length) {
                         res.data.forEach(n=> {
-                            this.lists.b.push(n.name);
+                            this.lists.b.push({name: n.name, section: n.section});
                         })
                         this.data.breakfast = this.lists.b.length;
                     }
@@ -140,9 +150,8 @@
                 }).then(res => {
                     if (res.data.length) {
                         res.data.forEach(n=> {
-                            this.lists.l.push(n.name);
+                            this.lists.l.push({name: n.name, section: n.section});
                         })
-                        console.log(res.data)
                         this.data.lunch = this.lists.l.length;
                     }                                  
                 }).catch(err => {
@@ -153,10 +162,23 @@
                 }).then(res => {
                     if (res.data.length) {
                         res.data.forEach(n=> {
-                            this.lists.d.push(n.name);
+                            this.lists.d.push({name: n.name, section: n.section});
                         })
                         console.log(this.lists.d)
                         this.data.dinner = this.lists.d.length;
+                    }
+                }).catch(err => {
+                    console.log('请求失败:' + err.status + ',' + err.statusText);
+                });
+                axios.get('http://119.23.189.182:80/users/findNightsnackByDate', {
+                    params: { date: this.currentDate }
+                }).then(res => {
+                    if (res.data.length) {
+                        res.data.forEach(n=> {
+                            this.lists.n.push({name: n.name, section: n.section});
+                        })
+                        console.log(this.lists.d)
+                        this.data.nightsnack = this.lists.n.length;
                     }
                 }).catch(err => {
                     console.log('请求失败:' + err.status + ',' + err.statusText);
@@ -302,13 +324,14 @@
         display: flex;
         flex-direction: column;
         overflow: scroll;
+        
         padding-bottom: 20px;
     }
 
     .list {
         width: 90%;
-        height: 200px;
-        min-height: 200px;
+        flex: 1;
+        min-height: 300px;
         margin: 0 auto;
         margin-top: 20px;
         border-radius: 10px;
@@ -337,5 +360,13 @@
         float: left;
         text-align: center;
         font-size: 18px;
+    }
+
+    .red {
+        color: red;
+    }
+
+    .blue {
+        color: blue;
     }
 </style>
