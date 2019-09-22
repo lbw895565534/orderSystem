@@ -19,6 +19,9 @@ import 'element-ui/lib/theme-chalk/index.css';
 import preview from 'vue-photo-preview'
 import 'vue-photo-preview/dist/skin.css'
 
+import VueClipboard from 'vue-clipboard2'
+
+Vue.use(VueClipboard)
 Vue.use(preview)
 Vue.use(Vant);
 Vue.use(ElementUI, { locale })

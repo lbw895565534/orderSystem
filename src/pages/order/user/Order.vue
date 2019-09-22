@@ -25,7 +25,8 @@
           <div class="meal">
             <div v-for="(item,index) in date1" class="mealSel">
               <!-- <input class="i" type="checkbox" name="date1" v-model="item.checked"> -->
-              <el-checkbox v-model="item.checked" :label="item.value" border fill="#fd737e" :disabled="item.disabled"></el-checkbox>
+              <el-checkbox v-model="item.checked" :label="item.value" border fill="#fd737e" :disabled="item.disabled">
+              </el-checkbox>
               <!-- <span>{{ item.value }}</span> -->
             </div>
           </div>
@@ -40,7 +41,8 @@
           <div class="meal">
             <div v-for="(item,index) in date2" class="mealSel">
               <!-- <input class="i" type="checkbox" name="date2" id="" v-model="item.checked"> -->
-              <el-checkbox v-model="item.checked" :label="item.value" border fill="#fd737e" :disabled="item.disabled"></el-checkbox>
+              <el-checkbox v-model="item.checked" :label="item.value" border fill="#fd737e" :disabled="item.disabled">
+              </el-checkbox>
               <!-- <span>{{ item.value }}</span> -->
             </div>
           </div>
@@ -55,13 +57,23 @@
           <div class="meal">
             <div v-for="(item,index) in date3" class="mealSel">
               <!-- <input class="i" type="checkbox" name="date2" id="" v-model="item.checked"> -->
-              <el-checkbox v-model="item.checked" :label="item.value" border fill="#fd737e" :disabled="item.disabled"></el-checkbox>
+              <el-checkbox v-model="item.checked" :label="item.value" border fill="#fd737e" :disabled="item.disabled">
+              </el-checkbox>
               <!-- <span>{{ item.value }}</span> -->
             </div>
           </div>
         </div>
         <div class="submit s3">
           <button @click="submit(3)">提交</button>
+        </div>
+        <div class="item item2" v-if="punish==1">
+          <br>
+          <center>
+            
+              <button @click="$router.push({name:'Article'})">进入投稿</button>
+           
+          </center>
+          <br>
         </div>
       </div>
     </div>
@@ -158,6 +170,7 @@
         ],
         id: window.localStorage.getItem("id"),
         name: window.localStorage.getItem("name"),
+        punish: window.localStorage.getItem("punish"),
       }
     },
     methods: {
@@ -416,6 +429,7 @@
 
     // 挂载完成时
     mounted() {
+      console.log("作者：" + this.punish);
       this.id = window.localStorage.getItem("id");
       this.creatDate();
       setInterval(() => {
@@ -538,6 +552,14 @@
     /* box-shadow: 0 1px 10px 0 #999; */
   }
 
+  .item2 {
+    box-shadow: 0 0 10px 0px #26a2ff;
+  }
+
+  .item2 button {
+    background: #26a2ff;
+  }
+
   .date {
     height: 48px;
     width: 100%;
@@ -607,5 +629,5 @@
     /*图片原始大小1倍*/
     transition: all ease 0.5s;
   }
- 
+
 </style>

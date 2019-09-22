@@ -63,7 +63,7 @@
         }).then(res => {
 
           Dialog.alert({
-            title: this.name + '的密码',
+            title: res.data[0].name + '的密码',
             message: res.data[0].password
           }).then(() => {
             // on close

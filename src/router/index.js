@@ -11,17 +11,20 @@ import OLogin from '@/pages/order/login/Login'
 import OSetpassword from '@/pages/order/login/Setpassword'
 import Order from '@/pages/order/user/Order'
 import ORecord from '@/pages/order/user/Record'
-import Swiper1 from '@/pages/media/swiper1'
-import Swiper from '@/pages/media/swiper'
 import Shift from '@/pages/shift/index'
-import AlbumLantern from '@/pages/media/album-Lantern'
-import Firework from '@/pages/media/firework'
+import Upload from '@/pages/practice/upload'
+// 娱乐
+import Showlove from '@/pages/media/showlove'
+import Article from '@/pages/media/article/article'
+import Addarticle from '@/pages/media/article/add-article'
+import Alterarticle from '@/pages/media/article/alter-article'
+
 
 Vue.use(Router)
 
 export default new Router({
   routes: [
-    
+    // 主业务
     {
       path: '/login',
       name: 'OLogin',
@@ -33,6 +36,11 @@ export default new Router({
       name: 'OReport',
       component: OReport,
     },    
+    {
+      path: '/upload',
+      name: 'Upload',
+      component: Upload,
+    },
     {
       path: '/setpassword',
       name: 'OSetpassword',
@@ -49,30 +57,12 @@ export default new Router({
       component: ORecord,
     },
     {
-      path: '/swiper1',
-      name: 'Swiper1',
-      component: Swiper1,
-    },
-    {
-      path: '/swiper',
-      name: 'Swiper',
-      component: Swiper,
-    },
-    {
       path: '/shift',
       name: 'Shift',
       component: Shift,
     },
-    {
-      path: '/album-lantern',
-      name: 'AlbumLantern',
-      component: AlbumLantern,
-    },
-    {
-      path: '/firework',
-      name: 'Firework',
-      component: Firework,
-    },
+
+    // 后台管理页面
     {
       path: '/omenu',
       name: 'Menu',
@@ -97,6 +87,28 @@ export default new Router({
       path: '/onotice',
       name: 'ONotice',
       component: ONotice,
+    },
+
+    // 娱乐页面
+    {
+      path: '/showlove',
+      name: 'Showlove',
+      component: Showlove,
+    },
+    {
+      path: '/article',
+      name: 'Article',
+      component: Article,
+    },
+    {
+      path: '/article/add',
+      name: 'Addarticle',
+      component: Addarticle,
+    },
+    {
+      path: '/article/alter',
+      name: 'Alterarticle',
+      component: Alterarticle,
     },
   ]
 })

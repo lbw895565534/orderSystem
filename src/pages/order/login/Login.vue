@@ -1,7 +1,7 @@
 <template>
   <transition enter-active-class="animated bounceInDown">
     <div id="container">
-        <img src="@/assets/img/bg_login.jpg" alt="" class="bg">
+      <img src="@/assets/img/bg_login.jpg" alt="" class="bg">
       <!-- <div class="title" style="">
         <span style="width:100%;height:auto;text-align:center;" >茂名站订餐系统</span>
       </div> -->
@@ -19,7 +19,6 @@
 
         <button class="username" @click="login()">登&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;录</button>
         <button class="username" @click="imgScc()">每周菜单</button>
-
       </div>
     </div>
   </transition>
@@ -49,38 +48,38 @@
         show3: false,
         ImagePreview: ["./static/img/list.jpg"],
         actions1: [{
-          name: '管理',
-          query: 'gl',
-        },
-        {
-          name: '其他',
-          query: 'ht',
+            name: '管理',
+            query: 'gl',
+          },
+          {
+            name: '其他',
+            query: 'ht',
 
-        },
-        {
-          name: '客运',
-          query: 'ky',
-        },
-        {
-          name: '运转',
-          query: 'yz',
-        },
-        {
-          name: '票房',
-          query: 'pf',
-        },
-        {
-          name: '饭堂',
-          query: 'ft',
-        },
-        {
-          name: '实习生',
-          query: 'sxs',
-        },
-        {
-          name: '助勤',
-          query: 'zq',
-        },
+          },
+          {
+            name: '客运',
+            query: 'ky',
+          },
+          {
+            name: '运转',
+            query: 'yz',
+          },
+          {
+            name: '票房',
+            query: 'pf',
+          },
+          {
+            name: '饭堂',
+            query: 'ft',
+          },
+          {
+            name: '实习生',
+            query: 'sxs',
+          },
+          {
+            name: '助勤',
+            query: 'zq',
+          },
         ],
         actions2: [
 
@@ -116,8 +115,10 @@
         }
       },
       imgScc() {
-        ImagePreview(this.ImagePreview)
+        ImagePreview(this.ImagePreview);
+        
       },
+      
       onSelect1(item) {
         // 点击选项时默认不会关闭菜单，可以手动关闭
         this.show1 = false;
@@ -167,8 +168,6 @@
             term: this.term
           }
         }).then(res => {
-          console.log(this.query, this.term);
-          console.log(res.data)
           this.actions3 = res.data;
         }).catch(err => {
           console.log('请求失败:' + err.status + ',' + err.statusText);
@@ -209,6 +208,7 @@
                 window.localStorage.setItem("username", res.data[0].username);
                 window.localStorage.setItem("password", res.data[0].password);
                 window.localStorage.setItem("job", res.data[0].job);
+                window.localStorage.setItem("punish", res.data[0].punish);
                 console.info(window.localStorage.getItem('rule'))
               }
               setTimeout(function () {
@@ -318,4 +318,5 @@
   /* .van-cell {
     line-height: 48px!important;
 } */
+
 </style>
