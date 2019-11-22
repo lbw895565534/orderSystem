@@ -12,7 +12,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "element-ui": "^2.4.11",
-    "vant": "^1.4.7",
+    "vant": "^2.1.8",
     "vue": "^2.5.2",
     "vue-cookie": "^1.1.4",
     "vue-cookies": "^1.5.7",
